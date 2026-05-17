@@ -1,15 +1,15 @@
-import Navbar from '@/components/marketing/Navbar'
-import Hero from '@/components/marketing/Hero'
-import LogosBand from '@/components/marketing/LogosBand'
-import StatsBand from '@/components/marketing/StatsBand'
-import Benefits from '@/components/marketing/Benefits'
-import Features from '@/components/marketing/Features'
-import Integrations from '@/components/marketing/Integrations'
-import HowItWorks from '@/components/marketing/HowItWorks'
-import FounderNote from '@/components/marketing/FounderNote'
-import FAQ from '@/components/marketing/FAQ'
-import CTASection from '@/components/marketing/CTASection'
-import Footer from '@/components/marketing/Footer'
+import Benefits from "@/components/marketing/Benefits";
+import CTASection from "@/components/marketing/CTASection";
+import FAQ from "@/components/marketing/FAQ";
+import Features from "@/components/marketing/Features";
+import Footer from "@/components/marketing/Footer";
+import FounderNote from "@/components/marketing/FounderNote";
+import Hero from "@/components/marketing/Hero";
+import HowItWorks from "@/components/marketing/HowItWorks";
+import Integrations from "@/components/marketing/Integrations";
+import LogosBand from "@/components/marketing/LogosBand";
+import Navbar from "@/components/marketing/Navbar";
+import StatsBand from "@/components/marketing/StatsBand";
 
 export default function MarketingPage() {
   return (
@@ -27,5 +27,5 @@ export default function MarketingPage() {
       <CTASection />
       <Footer />
     </>
-  )
+  );
 }

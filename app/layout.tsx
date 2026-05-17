@@ -14,7 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "usemoos · The AI knowledge layer for modern organizations",
-  description: "usemoos centralizes fragmented org knowledge across Slack, Notion, Drive, GitHub, Jira and 12+ other tools. Permission-aware, source-cited, conversational. Join the private beta.",
+  description:
+    "usemoos centralizes fragmented org knowledge across Slack, Notion, Drive, GitHub, Jira and 12+ other tools. Permission-aware, source-cited, conversational. Join the private beta.",
 };
 
 export default function RootLayout({

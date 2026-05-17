@@ -1,10 +1,13 @@
 interface MoosLogoProps {
-  size?: number
-  variant?: 'dark' | 'light'
+  size?: number;
+  variant?: "dark" | "light";
 }
 
-export default function MoosLogo({ size = 26, variant = 'dark' }: MoosLogoProps) {
-  const stroke = variant === 'light' ? '#FBFAF6' : '#0F1108'
+export default function MoosLogo({
+  size = 26,
+  variant = "dark",
+}: MoosLogoProps) {
+  const stroke = variant === "light" ? "#FBFAF6" : "#0F1108";
   return (
     <svg viewBox="0 0 60 60" width={size} height={size} aria-hidden="true">
       <path
@@ -28,5 +31,5 @@ export default function MoosLogo({ size = 26, variant = 'dark' }: MoosLogoProps)
         strokeWidth="1.2"
       />
     </svg>
-  )
+  );
 }
