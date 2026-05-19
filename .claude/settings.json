@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(host www.usemoos.com 8.8.8.8)",
+      "Bash(curl -sL https://usemoos.com)",
+      "Bash(curl -sI \"https://usemoos.com/_next/static/chunks/0u.nv30ln-_b5.css\")",
+      "Bash(curl -sI \"https://usemoos.com/\")",
+      "Bash(curl -sI \"https://usemoos.com/assets/usemoos_icon.png\")"
+    ]
+  }
+}
