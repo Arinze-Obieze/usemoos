@@ -19,9 +19,9 @@ export default function FounderNote() {
             <em>Org knowledge should not be a scavenger hunt.</em>
           </p>
           <div className={cx(styles, "who")}>
-            <span className={cx(styles, "av")}>AO</span>
+            <span className={cx(styles, "av")}>IA</span>
             <span>
-              <span className={cx(styles, "name")}>Arinze Obieze</span> ·{" "}
+              <span className={cx(styles, "name")}>Ifeanyi Awoke</span> ·{" "}
               <span className={cx(styles, "role")}>Founder, usemoos</span>
             </span>
           </div>

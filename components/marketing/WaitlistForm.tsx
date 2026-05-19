@@ -18,9 +18,11 @@ export default function WaitlistForm({
   const [submitted, setSubmitted] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState("");
   const [showErr, setShowErr] = useState(false);
+  const [serverErr, setServerErr] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [value, setValue] = useState("");
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const email = value.trim();
     const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -29,8 +31,22 @@ export default function WaitlistForm({
       return;
     }
     setShowErr(false);
-    setSubmittedEmail(email);
-    setSubmitted(true);
+    setServerErr(false);
+    setLoading(true);
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) throw new Error("failed");
+      setSubmittedEmail(email);
+      setSubmitted(true);
+    } catch {
+      setServerErr(true);
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (submitted) {
@@ -67,13 +83,18 @@ export default function WaitlistForm({
             setShowErr(false);
           }}
         />
-        <button type="submit">{buttonLabel}</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Joining…" : buttonLabel}
+        </button>
       </form>
       <div
         className={cx(styles, "waitlist-err", showErr && "show")}
         data-err={id}
       >
         ↳ that doesn&apos;t look like a valid email
+      </div>
+      <div className={cx(styles, "waitlist-err", serverErr && "show")}>
+        ↳ something went wrong, please try again
       </div>
     </>
   );

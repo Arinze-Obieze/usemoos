@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Usemoos Infrastructure Guide</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Georgia', serif;
+      font-size: 15px;
+      line-height: 1.8;
+      color: #1a1a2e;
+      background: #fff;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+
+    h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; color: #0f0f23; }
+    h2 { font-size: 22px; font-weight: 700; margin: 48px 0 16px; color: #0f0f23; border-bottom: 2px solid #e8e8f0; padding-bottom: 8px; }
+    h3 { font-size: 17px; font-weight: 700; margin: 28px 0 10px; color: #1a1a2e; }
+    h4 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; color: #333; }
+
+    p { margin-bottom: 14px; }
+    ul, ol { margin: 10px 0 14px 24px; }
+    li { margin-bottom: 6px; }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      background: #f4f4f8;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      padding: 1px 5px;
+    }
+
+    pre {
+      background: #1a1a2e;
+      color: #e8e8f0;
+      border-radius: 6px;
+      padding: 18px 20px;
+      margin: 14px 0 18px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: inherit;
+      font-size: inherit;
+    }
+
+    .cover {
+      text-align: center;
+      padding: 80px 0 60px;
+      border-bottom: 2px solid #e8e8f0;
+      margin-bottom: 60px;
+    }
+
+    .cover h1 { font-size: 38px; margin-bottom: 16px; }
+    .cover .subtitle { font-size: 18px; color: #666; margin-bottom: 8px; }
+    .cover .meta { font-size: 14px; color: #999; margin-top: 20px; }
+
+    .callout {
+      background: #f0f4ff;
+      border-left: 4px solid #4a6cf7;
+      border-radius: 0 6px 6px 0;
+      padding: 14px 18px;
+      margin: 18px 0;
+    }
+
+    .callout.warning {
+      background: #fff8f0;
+      border-left-color: #f7a54a;
+    }
+
+    .callout.success {
+      background: #f0fff4;
+      border-left-color: #4af7a5;
+    }
+
+    .callout strong { display: block; margin-bottom: 4px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 20px;
+      font-size: 14px;
+    }
+
+    th {
+      background: #1a1a2e;
+      color: #fff;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    td {
+      padding: 9px 14px;
+      border-bottom: 1px solid #e8e8f0;
+    }
+
+    tr:nth-child(even) td { background: #f9f9fc; }
+
+    .step {
+      display: flex;
+      gap: 16px;
+      margin: 16px 0;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      background: #1a1a2e;
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .diagram {
+      background: #f4f4f8;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 20px;
+      margin: 18px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      text-align: center;
+    }
+
+    .toc { background: #f9f9fc; border: 1px solid #e8e8f0; border-radius: 6px; padding: 24px 28px; margin-bottom: 40px; }
+    .toc h3 { margin-top: 0; margin-bottom: 12px; }
+    .toc ol { margin-left: 20px; }
+    .toc li { margin-bottom: 4px; font-size: 14px; }
+
+    @media print {
+      body { padding: 30px; }
+      pre { white-space: pre-wrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- COVER -->
+  <div class="cover">
+    <h1>Usemoos Infrastructure Guide</h1>
+    <div class="subtitle">From local dev to production on AWS</div>
+    <div class="subtitle">Waitlist · Docker · ECS Fargate · CloudFront · CI/CD</div>
+    <div class="meta">Prepared by Arinze Obieze &nbsp;·&nbsp; May 2026 &nbsp;·&nbsp; Confidential</div>
+  </div>
+
+  <!-- TABLE OF CONTENTS -->
+  <div class="toc">
+    <h3>Contents</h3>
+    <ol>
+      <li>What we built and why</li>
+      <li>Waitlist with AWS SES</li>
+      <li>Dockerizing the Next.js app</li>
+      <li>AWS infrastructure overview</li>
+      <li>Each AWS service explained</li>
+      <li>Terraform — infrastructure as code</li>
+      <li>CI/CD with GitHub Actions</li>
+      <li>DNS with Cloudflare</li>
+      <li>How a request flows end to end</li>
+      <li>Environment variables and secrets</li>
+      <li>What happens on every deploy</li>
+      <li>Reference: files created</li>
+    </ol>
+  </div>
+
+
+  <!-- SECTION 1 -->
+  <h2>1. What We Built and Why</h2>
+
+  <p>The usemoos marketing site is a Next.js application — the public-facing landing page for the product that collects waitlist signups. It needed to go from running only on a local machine to being live on the internet at <code>usemoos.com</code>, with automatic deployments every time code is pushed.</p>
+
+  <p>We built four things to make that happen:</p>
+
+  <ul>
+    <li><strong>Waitlist emails via AWS SES</strong> — when someone submits their email, AWS sends them a confirmation and notifies you</li>
+    <li><strong>Docker</strong> — packages the app into a portable, self-contained image that runs identically everywhere</li>
+    <li><strong>AWS infrastructure via Terraform</strong> — the cloud resources that run the Docker container and serve it to the world</li>
+    <li><strong>GitHub Actions CI/CD</strong> — automatically rebuilds and redeploys the site on every push to the main branch</li>
+  </ul>
+
+
+  <!-- SECTION 2 -->
+  <h2>2. Waitlist with AWS SES</h2>
+
+  <p>SES stands for Simple Email Service — it is Amazon's managed email sending service. When a visitor submits their email on the landing page, two things happen simultaneously:</p>
+
+  <ol>
+    <li>A confirmation email is sent to the visitor</li>
+    <li>A notification email is sent to <code>usemoos.com@gmail.com</code> so you know someone signed up</li>
+  </ol>
+
+  <h3>How it works technically</h3>
+
+  <p>The form in <code>WaitlistForm.tsx</code> sends a POST request to <code>/api/waitlist</code>. That API route (a Next.js Route Handler) receives the email, validates it, and calls the AWS SES SDK to send both emails.</p>
+
+  <pre><code>Browser form
+    ↓ POST /api/waitlist { email }
+Next.js Route Handler (app/api/waitlist/route.ts)
+    ↓ SESClient.send()
+AWS SES (eu-north-1)
+    ↓ sends two emails
+Confirmation → visitor's inbox
+Notification → usemoos.com@gmail.com</code></pre>
+
+  <h3>SES sandbox vs production</h3>
+
+  <div class="callout warning">
+    <strong>Important:</strong> New AWS accounts start in SES sandbox mode. In sandbox mode you can only send emails to verified addresses. We requested production access — once approved by AWS (usually within a few hours), you can send to any address.
+  </div>
+
+  <h3>Sender identity</h3>
+  <p>We verified the domain <code>usemoos.com</code> in SES, which allows sending from any address under that domain. The FROM address used is <code>hello@usemoos.com</code>.</p>
+
+  <h3>Credentials in production</h3>
+  <p>Locally, the app uses <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> from <code>.env.local</code>. In production on ECS, these are not needed — the ECS Task Role grants SES permission directly. The AWS SDK automatically detects this and uses the role credentials without any configuration change in the code.</p>
+
+
+  <!-- SECTION 3 -->
+  <h2>3. Dockerizing the Next.js App</h2>
+
+  <p>Docker packages the application and everything it needs to run (Node.js, dependencies, built files) into a single portable image. That image can then be run identically on any machine — your laptop, a cloud server, or an AWS container service.</p>
+
+  <h3>Why Docker?</h3>
+  <p>Without Docker, deploying a Node.js app to a server means installing Node, copying files, managing versions, and dealing with "it works on my machine" problems. With Docker, the image is the deployment artifact — the same thing that passes your local test is exactly what runs in production.</p>
+
+  <h3>Multi-stage build</h3>
+  <p>The <code>Dockerfile</code> uses three stages to keep the final image as small as possible:</p>
+
+  <table>
+    <tr><th>Stage</th><th>What it does</th><th>Why separate?</th></tr>
+    <tr><td><code>deps</code></td><td>Installs npm packages</td><td>Cached separately so rebuilds skip this step if package.json hasn't changed</td></tr>
+    <tr><td><code>builder</code></td><td>Runs <code>next build</code></td><td>Compiles TypeScript, bundles CSS, generates static pages</td></tr>
+    <tr><td><code>runner</code></td><td>Copies only the built output</td><td>Final image contains no source code or dev dependencies — just what's needed to run</td></tr>
+  </table>
+
+  <h3>Standalone output</h3>
+  <p>We added <code>output: "standalone"</code> to <code>next.config.ts</code>. This tells Next.js to produce a minimal self-contained build in <code>.next/standalone/</code> that includes only the files needed to run the server — no full <code>node_modules</code> folder. This is what makes the Docker image only 68MB instead of several hundred.</p>
+
+  <h3>Running the container</h3>
+  <pre><code># Build the image
+docker build -t usemoose-marketing .
+
+# Run it locally on port 3001
+docker run -p 3001:3000 usemoose-marketing</code></pre>
+
+  <p>The container runs as a non-root user (<code>nextjs</code>) on port 3000 for security.</p>
+
+
+  <!-- SECTION 4 -->
+  <h2>4. AWS Infrastructure Overview</h2>
+
+  <p>The diagram below shows how the pieces connect. A visitor's browser makes a request to <code>usemoos.com</code> and it travels through several AWS services before reaching the running application:</p>
+
+  <div class="diagram">
+    Browser
+      ↓
+    Cloudflare DNS (resolves usemoos.com → CloudFront)
+      ↓
+    AWS CloudFront (CDN — caches static assets globally)
+      ↓
+    AWS ALB (Application Load Balancer — HTTPS termination)
+      ↓
+    AWS ECS Fargate (runs the Docker container)
+      ↓
+    Next.js app (port 3000)
+  </div>
+
+  <p>Supporting services:</p>
+  <ul>
+    <li><strong>ECR</strong> — stores Docker images</li>
+    <li><strong>ACM</strong> — provides SSL/TLS certificates for HTTPS</li>
+    <li><strong>IAM</strong> — controls what the container is allowed to do (send emails via SES)</li>
+    <li><strong>CloudWatch</strong> — stores logs from the running container</li>
+  </ul>
+
+
+  <!-- SECTION 5 -->
+  <h2>5. Each AWS Service Explained</h2>
+
+  <h3>ECR — Elastic Container Registry</h3>
+  <p>ECR is AWS's private Docker image registry, like Docker Hub but private and inside your AWS account. When we build a new Docker image, we push it to ECR. When ECS needs to run the app, it pulls the image from ECR. We configured a lifecycle policy to keep only the last 10 images so storage costs don't grow unbounded.</p>
+
+  <h3>ECS Fargate — Elastic Container Service</h3>
+  <p>ECS Fargate runs Docker containers in the cloud without you managing any servers. You tell it what image to run, how much CPU and memory to allocate (256 CPU units / 512MB RAM for this app), and how many copies to run (1). AWS handles the underlying infrastructure — patching, scaling the host machines, replacing failed containers.</p>
+
+  <p>Key concepts:</p>
+  <table>
+    <tr><th>Term</th><th>What it is</th></tr>
+    <tr><td>Cluster</td><td>A logical grouping of services — ours is named <code>usemoose</code></td></tr>
+    <tr><td>Task Definition</td><td>A blueprint describing the container: which image, how much CPU/memory, environment variables, ports</td></tr>
+    <tr><td>Service</td><td>Keeps a specified number of task copies running at all times. If a container crashes, ECS restarts it automatically</td></tr>
+    <tr><td>Task</td><td>A running instance of the task definition — the actual container</td></tr>
+  </table>
+
+  <h3>ALB — Application Load Balancer</h3>
+  <p>The ALB sits in front of ECS and handles incoming HTTP/HTTPS traffic. It does two things for us:</p>
+  <ul>
+    <li><strong>SSL termination</strong> — handles HTTPS using the ACM certificate, then forwards plain HTTP internally to the container</li>
+    <li><strong>HTTP → HTTPS redirect</strong> — any request on port 80 is automatically redirected to port 443</li>
+  </ul>
+  <p>The ALB uses a <em>target group</em> to know which containers to forward requests to. ECS automatically registers and deregisters containers in the target group as they start and stop.</p>
+
+  <h3>CloudFront — Content Delivery Network</h3>
+  <p>CloudFront is AWS's global CDN. It sits in front of the ALB and serves content from edge locations close to the visitor — so a user in Singapore doesn't have to wait for a response from Stockholm.</p>
+
+  <p>We configured three cache behaviours:</p>
+  <table>
+    <tr><th>Path</th><th>Cache TTL</th><th>Why</th></tr>
+    <tr><td><code>/_next/static/*</code></td><td>1 year</td><td>Next.js static assets have content hashes in filenames — safe to cache forever</td></tr>
+    <tr><td><code>/assets/*</code></td><td>1 day</td><td>Images and icons change rarely</td></tr>
+    <tr><td>Everything else</td><td>0 (no cache)</td><td>Pages and API routes must be served fresh</td></tr>
+  </table>
+
+  <p>On every deploy, GitHub Actions sends a CloudFront invalidation (<code>/*</code>) to flush the cache so visitors immediately see the new version.</p>
+
+  <h3>ACM — AWS Certificate Manager</h3>
+  <p>ACM provides free SSL/TLS certificates for HTTPS. We created two certificates:</p>
+  <ul>
+    <li>One in <code>eu-north-1</code> for the ALB</li>
+    <li>One in <code>us-east-1</code> for CloudFront — CloudFront requires certificates to be in us-east-1 regardless of where your infrastructure is</li>
+  </ul>
+  <p>Certificates are validated via DNS — we added CNAME records in Cloudflare that prove we own the domain. ACM renews certificates automatically before expiry.</p>
+
+  <h3>IAM — Identity and Access Management</h3>
+  <p>IAM controls permissions. We created two roles for the ECS task:</p>
+  <table>
+    <tr><th>Role</th><th>Used by</th><th>Permissions</th></tr>
+    <tr><td>Execution Role</td><td>ECS itself (to start the container)</td><td>Pull image from ECR, write logs to CloudWatch</td></tr>
+    <tr><td>Task Role</td><td>The running application code</td><td>Send emails via SES (<code>ses:SendEmail</code>)</td></tr>
+  </table>
+  <p>The Task Role is what allows the waitlist API to send emails in production without hardcoded credentials. The AWS SDK automatically uses these role credentials when running inside ECS.</p>
+
+  <h3>CloudWatch</h3>
+  <p>CloudWatch collects logs from the running container. Every <code>console.log</code> and error in the Next.js app appears in CloudWatch under the log group <code>/ecs/usemoose-marketing</code>. Logs are retained for 30 days.</p>
+
+
+  <!-- SECTION 6 -->
+  <h2>6. Terraform — Infrastructure as Code</h2>
+
+  <p>Terraform is a tool that lets you describe infrastructure in code files (<code>.tf</code> files) and then create, update, or destroy it by running a command. Instead of clicking through the AWS console to create each resource, you write what you want and Terraform figures out how to create it.</p>
+
+  <h3>Why this matters</h3>
+  <div class="callout success">
+    <strong>Reproducibility:</strong> If something goes wrong and you need to recreate the infrastructure, you run <code>terraform apply</code> and everything is restored exactly as specified. No guesswork about what settings were used.
+  </div>
+
+  <h3>Key commands</h3>
+  <table>
+    <tr><th>Command</th><th>What it does</th></tr>
+    <tr><td><code>terraform init</code></td><td>Downloads the AWS provider plugin — run once after cloning</td></tr>
+    <tr><td><code>terraform plan</code></td><td>Shows what would be created/changed/destroyed without doing it</td></tr>
+    <tr><td><code>terraform apply</code></td><td>Creates or updates resources to match the configuration</td></tr>
+    <tr><td><code>terraform destroy</code></td><td>Deletes all resources managed by Terraform</td></tr>
+    <tr><td><code>terraform output</code></td><td>Shows the output values (CloudFront ID, ECR URL, etc.)</td></tr>
+  </table>
+
+  <h3>File structure</h3>
+  <table>
+    <tr><th>File</th><th>Purpose</th></tr>
+    <tr><td><code>main.tf</code></td><td>Provider configuration, VPC data sources</td></tr>
+    <tr><td><code>variables.tf</code></td><td>Configurable values: region, domain name, CPU/memory</td></tr>
+    <tr><td><code>ecr.tf</code></td><td>Docker image registry</td></tr>
+    <tr><td><code>iam.tf</code></td><td>Execution role and task role with SES permissions</td></tr>
+    <tr><td><code>alb.tf</code></td><td>Load balancer, security groups, HTTPS listener, ACM cert</td></tr>
+    <tr><td><code>ecs.tf</code></td><td>Cluster, task definition, service, CloudWatch log group</td></tr>
+    <tr><td><code>cloudfront.tf</code></td><td>CDN distribution, cache behaviours, us-east-1 ACM cert</td></tr>
+    <tr><td><code>outputs.tf</code></td><td>Values to print after apply: ECR URL, CloudFront ID, etc.</td></tr>
+  </table>
+
+  <h3>Two-phase apply for Cloudflare DNS validation</h3>
+  <p>Because DNS is managed in Cloudflare (not Route 53), certificate validation requires a manual step. The apply was split into two phases:</p>
+
+  <div class="step"><div class="step-num">1</div><div>Create only the ACM certificates: <code>terraform apply -target=aws_acm_certificate.alb -target=aws_acm_certificate.cdn</code> — this outputs the CNAME records needed for validation</div></div>
+  <div class="step"><div class="step-num">2</div><div>Add those CNAME records in Cloudflare (DNS only, grey cloud)</div></div>
+  <div class="step"><div class="step-num">3</div><div>Run full <code>terraform apply</code> — Terraform waits for ACM to confirm validation, then creates all remaining resources</div></div>
+
+
+  <!-- SECTION 7 -->
+  <h2>7. CI/CD with GitHub Actions</h2>
+
+  <p>CI/CD stands for Continuous Integration / Continuous Deployment. It means every time you push code to the main branch, an automated process builds and deploys the new version without you doing anything manually.</p>
+
+  <h3>The workflow file</h3>
+  <p>The file <code>.github/workflows/deploy.yml</code> defines what happens on every push to <code>main</code>. GitHub runs this automatically on their servers (called runners).</p>
+
+  <h3>Steps in order</h3>
+  <table>
+    <tr><th>Step</th><th>What it does</th></tr>
+    <tr><td>Checkout</td><td>Downloads the repository code onto the runner</td></tr>
+    <tr><td>Configure AWS credentials</td><td>Authenticates with AWS using the deploy IAM user secrets stored in GitHub</td></tr>
+    <tr><td>Login to ECR</td><td>Authenticates Docker with the ECR registry so it can push images</td></tr>
+    <tr><td>Build &amp; push image</td><td>Builds the Docker image and pushes it with two tags: <code>latest</code> and the git commit SHA</td></tr>
+    <tr><td>Download task definition</td><td>Fetches the current ECS task definition JSON from AWS</td></tr>
+    <tr><td>Render new task definition</td><td>Updates the task definition with the new image URI</td></tr>
+    <tr><td>Deploy to ECS</td><td>Registers the new task definition and updates the ECS service — waits for stability</td></tr>
+    <tr><td>Invalidate CloudFront</td><td>Clears the CDN cache so visitors get the new version immediately</td></tr>
+  </table>
+
+  <h3>GitHub Secrets</h3>
+  <p>The workflow uses secrets stored in GitHub (Settings → Secrets → Actions) so credentials are never in the code:</p>
+  <table>
+    <tr><th>Secret</th><th>Value</th></tr>
+    <tr><td><code>AWS_ACCESS_KEY_ID</code></td><td>Deploy IAM user access key</td></tr>
+    <tr><td><code>AWS_SECRET_ACCESS_KEY</code></td><td>Deploy IAM user secret key</td></tr>
+    <tr><td><code>AWS_REGION</code></td><td>eu-north-1</td></tr>
+    <tr><td><code>ECR_REPOSITORY</code></td><td>usemoose-marketing</td></tr>
+    <tr><td><code>ECS_CLUSTER</code></td><td>usemoose</td></tr>
+    <tr><td><code>ECS_SERVICE</code></td><td>usemoose-marketing</td></tr>
+    <tr><td><code>ECS_TASK_DEFINITION</code></td><td>usemoose-marketing</td></tr>
+    <tr><td><code>CONTAINER_NAME</code></td><td>usemoose-marketing</td></tr>
+    <tr><td><code>CLOUDFRONT_DISTRIBUTION_ID</code></td><td>E1J6J326KTVC0I</td></tr>
+  </table>
+
+  <h3>Image tagging strategy</h3>
+  <p>Every image is pushed with two tags: <code>latest</code> and the git commit SHA (e.g. <code>sha256:abc123...</code>). The SHA tag means every deploy is traceable — you can always identify exactly which commit is running in production and roll back to a previous image by deploying a specific SHA tag.</p>
+
+
+  <!-- SECTION 8 -->
+  <h2>8. DNS with Cloudflare</h2>
+
+  <p>The domain <code>usemoos.com</code> is registered on GoDaddy but DNS is managed through Cloudflare. Cloudflare is positioned in front of everything and is what visitors hit first when they type the domain.</p>
+
+  <h3>Records added in Cloudflare</h3>
+  <table>
+    <tr><th>Type</th><th>Name</th><th>Target</th><th>Proxy</th></tr>
+    <tr><td>CNAME</td><td>@</td><td>d3te6mtqhkrat9.cloudfront.net</td><td>DNS only (grey)</td></tr>
+    <tr><td>CNAME</td><td>www</td><td>d3te6mtqhkrat9.cloudfront.net</td><td>DNS only (grey)</td></tr>
+    <tr><td>CNAME</td><td>_3ee56831d17d65e33bd25b599d013458</td><td>ACM validation value</td><td>DNS only (grey)</td></tr>
+    <tr><td>CNAME</td><td>_0ed03141cc250386d8c69c2dc261a1ed.www</td><td>ACM validation value</td><td>DNS only (grey)</td></tr>
+  </table>
+
+  <h3>Why DNS only (grey cloud)?</h3>
+  <p>Cloudflare offers two modes — proxied (orange cloud) and DNS only (grey cloud). When proxied, traffic passes through Cloudflare's servers for DDoS protection and caching. We use DNS only because CloudFront already handles CDN and caching. Putting Cloudflare proxy in front of CloudFront causes SSL conflicts and adds unnecessary complexity.</p>
+
+  <div class="callout">
+    <strong>Note:</strong> The ACM validation CNAME records must always remain in Cloudflare. ACM uses them to automatically renew the certificates annually. Deleting them would cause the certificates to expire.
+  </div>
+
+
+  <!-- SECTION 9 -->
+  <h2>9. How a Request Flows End to End</h2>
+
+  <p>Here is what happens when someone visits <code>usemoos.com</code>:</p>
+
+  <div class="step"><div class="step-num">1</div><div><strong>DNS resolution</strong> — the browser asks Cloudflare's DNS where <code>usemoos.com</code> is. Cloudflare returns the CloudFront distribution domain (<code>d3te6mtqhkrat9.cloudfront.net</code>)</div></div>
+  <div class="step"><div class="step-num">2</div><div><strong>CloudFront edge</strong> — the request hits the nearest CloudFront edge location. For a static asset like a CSS file, CloudFront returns it directly from cache. For a page or API request, it forwards to the origin</div></div>
+  <div class="step"><div class="step-num">3</div><div><strong>ALB</strong> — CloudFront forwards to the ALB in Stockholm (<code>eu-north-1</code>). The ALB terminates HTTPS and forwards plain HTTP to the ECS container on port 3000</div></div>
+  <div class="step"><div class="step-num">4</div><div><strong>ECS container</strong> — the Next.js app handles the request and returns a response</div></div>
+  <div class="step"><div class="step-num">5</div><div><strong>Response travels back</strong> through ALB → CloudFront → browser</div></div>
+
+  <h3>Waitlist form submission</h3>
+  <div class="step"><div class="step-num">1</div><div>Form submits POST to <code>/api/waitlist</code></div></div>
+  <div class="step"><div class="step-num">2</div><div>CloudFront passes it through (no cache on API routes)</div></div>
+  <div class="step"><div class="step-num">3</div><div>Next.js route handler validates the email and calls SES</div></div>
+  <div class="step"><div class="step-num">4</div><div>SES sends confirmation to visitor and notification to <code>usemoos.com@gmail.com</code></div></div>
+  <div class="step"><div class="step-num">5</div><div>Route handler returns <code>{ ok: true }</code>, form shows success state</div></div>
+
+
+  <!-- SECTION 10 -->
+  <h2>10. Environment Variables and Secrets</h2>
+
+  <table>
+    <tr><th>Variable</th><th>Local (.env.local)</th><th>Production (ECS)</th></tr>
+    <tr><td><code>AWS_REGION</code></td><td>eu-north-1</td><td>Set in task definition</td></tr>
+    <tr><td><code>AWS_ACCESS_KEY_ID</code></td><td>IAM user key</td><td>Not needed — task role used instead</td></tr>
+    <tr><td><code>AWS_SECRET_ACCESS_KEY</code></td><td>IAM user secret</td><td>Not needed — task role used instead</td></tr>
+    <tr><td><code>NODE_ENV</code></td><td>development (default)</td><td>production (set in task definition)</td></tr>
+  </table>
+
+  <div class="callout warning">
+    <strong>Never commit .env.local to git.</strong> It is listed in <code>.gitignore</code>. The AWS credentials in that file give access to your entire AWS account.
+  </div>
+
+
+  <!-- SECTION 11 -->
+  <h2>11. What Happens on Every Deploy</h2>
+
+  <p>Once everything is set up, the deployment process is fully automatic. Here is the complete lifecycle of a code change:</p>
+
+  <div class="step"><div class="step-num">1</div><div>You edit code and push to the <code>main</code> branch on GitHub</div></div>
+  <div class="step"><div class="step-num">2</div><div>GitHub detects the push and triggers the <code>deploy.yml</code> workflow on a GitHub-hosted runner</div></div>
+  <div class="step"><div class="step-num">3</div><div>The runner builds a new Docker image from the latest code</div></div>
+  <div class="step"><div class="step-num">4</div><div>The image is pushed to ECR tagged with the commit SHA</div></div>
+  <div class="step"><div class="step-num">5</div><div>A new ECS task definition revision is registered pointing to the new image</div></div>
+  <div class="step"><div class="step-num">6</div><div>ECS starts a new container with the new image (old container keeps running until new one is healthy)</div></div>
+  <div class="step"><div class="step-num">7</div><div>Once the new container passes health checks, ECS stops the old one</div></div>
+  <div class="step"><div class="step-num">8</div><div>CloudFront cache is invalidated — visitors get the new version on next request</div></div>
+  <div class="step"><div class="step-num">9</div><div>GitHub Actions reports success — total time approximately 3-5 minutes</div></div>
+
+
+  <!-- SECTION 12 -->
+  <h2>12. Reference: Files Created</h2>
+
+  <table>
+    <tr><th>File</th><th>Purpose</th></tr>
+    <tr><td><code>Dockerfile</code></td><td>Multi-stage build definition for the Next.js container</td></tr>
+    <tr><td><code>.dockerignore</code></td><td>Files excluded from the Docker build context</td></tr>
+    <tr><td><code>next.config.ts</code></td><td>Updated with <code>output: "standalone"</code> for efficient Docker builds</td></tr>
+    <tr><td><code>app/api/waitlist/route.ts</code></td><td>Next.js route handler — receives form submissions and calls SES</td></tr>
+    <tr><td><code>components/marketing/WaitlistForm.tsx</code></td><td>Updated to POST to the API and handle loading/error states</td></tr>
+    <tr><td><code>.env.local</code></td><td>Local environment variables (AWS credentials for SES) — never committed</td></tr>
+    <tr><td><code>infra/main.tf</code></td><td>Terraform provider config, VPC data sources</td></tr>
+    <tr><td><code>infra/variables.tf</code></td><td>Configuration: region, domain (<code>usemoos.com</code>), CPU/memory</td></tr>
+    <tr><td><code>infra/ecr.tf</code></td><td>ECR repository and lifecycle policy</td></tr>
+    <tr><td><code>infra/iam.tf</code></td><td>ECS execution role and task role with SES permissions</td></tr>
+    <tr><td><code>infra/alb.tf</code></td><td>Load balancer, security groups, ACM certificate, HTTPS listener</td></tr>
+    <tr><td><code>infra/ecs.tf</code></td><td>ECS cluster, task definition, service, CloudWatch log group</td></tr>
+    <tr><td><code>infra/cloudfront.tf</code></td><td>CloudFront distribution and us-east-1 ACM certificate</td></tr>
+    <tr><td><code>infra/outputs.tf</code></td><td>Terraform outputs: ECR URL, CloudFront ID, cert validation CNAMEs</td></tr>
+    <tr><td><code>.github/workflows/deploy.yml</code></td><td>GitHub Actions CI/CD workflow — builds and deploys on push to main</td></tr>
+  </table>
+
+  <br/><br/>
+  <hr style="border: 1px solid #e8e8f0; margin: 40px 0 20px"/>
+  <p style="font-size: 13px; color: #999; text-align: center;">Usemoos Infrastructure Guide &nbsp;·&nbsp; Prepared by Arinze Obieze &nbsp;·&nbsp; May 2026 &nbsp;·&nbsp; Confidential</p>
+
+</body>
+</html>
