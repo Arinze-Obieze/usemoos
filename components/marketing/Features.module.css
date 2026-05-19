@@ -1,0 +1,723 @@
+/* ─────────── feature split sections ─────────── */
+.feature-split {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 72px;
+  align-items: center;
+}
+.feature-split > * {
+  min-width: 0;
+}
+.feature-split.flip {
+  grid-template-columns: 1.15fr 1fr;
+}
+.feature-split.flip .feat-copy {
+  order: 2;
+}
+.feature-spaced {
+  margin-bottom: 120px;
+}
+
+.feat-copy h3 {
+  font-size: clamp(28px, 3vw, 40px);
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-wrap: balance;
+}
+.feat-copy h3 em {
+  font-style: normal;
+  background: linear-gradient(
+    180deg,
+    transparent 62%,
+    var(--accent) 62%,
+    var(--accent) 94%,
+    transparent 94%
+  );
+  padding: 0 0.06em;
+}
+.feat-copy p {
+  font-size: 17px;
+  color: var(--ink-2);
+  line-height: 1.55;
+  margin-bottom: 14px;
+  text-wrap: pretty;
+}
+.feat-bullets {
+  list-style: none;
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.feat-bullets li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 15px;
+  color: var(--ink-2);
+}
+.feat-bullets li b {
+  color: var(--ink);
+  font-weight: 600;
+}
+.feat-bullets .check {
+  width: 20px;
+  height: 20px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--accent-ink);
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* feature mockup container */
+.feat-mock {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 22px;
+  box-shadow: var(--shadow-lg);
+  min-height: 380px;
+}
+.feat-mock::before {
+  content: "";
+  position: absolute;
+  inset: -40px;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(200, 255, 123, 0.18) 0%,
+    transparent 60%
+  );
+  filter: blur(20px);
+}
+.feature-split.flip .feat-mock {
+  order: 1;
+}
+
+/* SEARCH MOCKUP */
+.search-mock .search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+.search-mock .search-bar .ico {
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+.search-mock .search-bar .typed {
+  flex: 1;
+}
+.search-mock .search-bar .caret {
+  width: 1.5px;
+  height: 14px;
+  background: var(--ink);
+  animation: blink 1s infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.search-mock .results-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.search-mock .results-label .count {
+  color: var(--accent-ink);
+}
+
+.search-mock .result {
+  display: flex;
+  gap: 12px;
+  padding: 12px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin-bottom: 7px;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.4s,
+    transform 0.4s,
+    border-color 0.15s,
+    background 0.15s;
+}
+.search-mock .result.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+.search-mock .result:hover {
+  border-color: var(--line-2);
+  background: var(--surface);
+}
+.search-mock .result-ico {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 12px;
+  color: #fff;
+  flex-shrink: 0;
+}
+.search-mock .result-info {
+  flex: 1;
+  min-width: 0;
+}
+.search-mock .result-title {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.search-mock .result-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+.search-mock .result-score {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--accent-ink);
+  background: var(--accent);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+/* PERMISSIONS MOCKUP */
+.perm-mock .perm-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+.perm-mock .perm-header .who {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--bg);
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 600;
+}
+.perm-mock .perm-header .name {
+  color: var(--ink);
+  font-weight: 500;
+}
+.perm-mock .perm-header .role {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+.perm-mock .perm-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.perm-mock .doc {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin-bottom: 6px;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition:
+    opacity 0.35s,
+    transform 0.35s;
+}
+.perm-mock .doc.in {
+  opacity: 1;
+  transform: translateX(0);
+}
+.perm-mock .doc-ico {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.perm-mock .doc-name {
+  flex: 1;
+  font-size: 13px;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.perm-mock .doc-status {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 500;
+  opacity: 0;
+  transform: scale(0.85);
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+}
+.perm-mock .doc.in .doc-status {
+  opacity: 1;
+  transform: scale(1);
+  transition-delay: 0.3s;
+}
+.perm-mock .doc-status.ok {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.perm-mock .doc-status.deny {
+  background: rgba(181, 49, 30, 0.12);
+  color: var(--danger);
+}
+.perm-mock .doc.deny .doc-name {
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: rgba(110, 112, 101, 0.4);
+}
+
+/* SYNC MOCKUP */
+.sync-mock .sync-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.sync-mock .sync-header .title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.sync-mock .sync-header .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  background: rgba(166, 224, 77, 0.18);
+  border: 1px solid var(--accent-2);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent-ink);
+  font-weight: 500;
+}
+.sync-mock .sync-header .badge::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-2);
+  box-shadow: 0 0 6px rgba(166, 224, 77, 0.6);
+  animation: pulse 1.5s infinite;
+}
+
+.sync-row {
+  display: grid;
+  grid-template-columns: 28px 1fr auto auto;
+  gap: 12px;
+  padding: 10px 4px;
+  align-items: center;
+  font-size: 13px;
+  border-bottom: 1px solid var(--line);
+}
+.sync-row:last-of-type {
+  border-bottom: 0;
+}
+.sync-row .icoR {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+}
+.sync-mock .sync-row .name {
+  color: var(--ink);
+  font-weight: 500;
+}
+.sync-row .meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+.sync-row .meta b {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+.sync-row .pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-2);
+  box-shadow: 0 0 6px rgba(166, 224, 77, 0.6);
+  animation: pulse 2s infinite;
+}
+.sync-row .pulse-dot.warn {
+  background: var(--warning);
+  box-shadow: 0 0 6px rgba(176, 122, 30, 0.4);
+}
+.sync-row .pulse-dot.idle {
+  background: var(--dim);
+  box-shadow: none;
+  animation: none;
+}
+
+.sync-flow {
+  margin-top: 14px;
+  padding: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ink-2);
+  position: relative;
+  overflow: hidden;
+}
+.sync-flow .flow-label {
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.sync-flow .flow-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+}
+.sync-flow .flow-line.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+.sync-flow .flow-line .step-ico {
+  color: var(--accent-ink);
+  width: 14px;
+  flex-shrink: 0;
+}
+.sync-flow .flow-line .lbl {
+  flex: 1;
+}
+.sync-flow .flow-line .t {
+  color: var(--muted);
+  font-size: 10.5px;
+}
+
+/* THREAD MOCKUP */
+.thread-mock .thread-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.thread-mock .thread-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.thread-mock .thread-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.thread-msg {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.4s,
+    transform 0.4s;
+}
+.thread-msg.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+.thread-msg .ava {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--ink-2);
+  flex-shrink: 0;
+}
+.thread-msg.ai .ava {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--accent);
+}
+.thread-msg .bub {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--ink-2);
+  max-width: 88%;
+  line-height: 1.45;
+}
+.thread-msg.user .bub {
+  background: transparent;
+  border-color: var(--line-2);
+  color: var(--ink);
+}
+.thread-msg .bub b {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.regen-bar {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  margin-left: 34px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.4s,
+    transform 0.4s;
+}
+.regen-bar.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+.regen-bar button {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 4px 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--ink-2);
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+  cursor: default;
+}
+.regen-bar button:hover {
+  border-color: var(--line-2);
+  color: var(--ink);
+}
+
+@media (max-width: 900px) {
+  .feature-split,
+  .feature-split.flip {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .feature-split.flip .feat-copy {
+    order: 1;
+  }
+  .feature-split.flip .feat-mock {
+    order: 2;
+  }
+  .feature-split.feature-split .feat-mock {
+    padding: 18px;
+    min-height: auto;
+  }
+  .feat-copy h3 {
+    font-size: clamp(24px, 4vw, 32px);
+  }
+  .feat-copy p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .feature-split,
+  .feature-split.flip {
+    gap: 28px;
+  }
+  .feature-spaced {
+    margin-bottom: 80px;
+  }
+  .feature-split.feature-split .feat-mock {
+    padding: 14px;
+    border-radius: 12px;
+  }
+  .feat-mock::before {
+    display: none;
+  }
+  .feat-copy h3 {
+    font-size: 24px;
+  }
+  .feat-copy p {
+    font-size: 15px;
+  }
+  .feat-bullets li {
+    font-size: 14px;
+    gap: 10px;
+  }
+  .feat-bullets .check {
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+  }
+
+  .search-mock .search-bar {
+    font-size: 12px;
+    padding: 9px 12px;
+  }
+  .search-mock .result {
+    padding: 10px;
+    gap: 10px;
+  }
+  .search-mock .result-ico {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+  }
+  .search-mock .result-title {
+    font-size: 12.5px;
+  }
+  .search-mock .result-meta {
+    font-size: 10.5px;
+  }
+  .search-mock .result-score {
+    font-size: 10px;
+    padding: 2px 5px;
+  }
+
+  .perm-mock .perm-header {
+    padding: 9px 12px;
+    gap: 9px;
+  }
+  .perm-mock .perm-header .who {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+  .perm-mock .perm-header .name {
+    font-size: 13px;
+  }
+  .perm-mock .perm-header .role {
+    font-size: 11px;
+  }
+  .perm-mock .doc {
+    padding: 8px 10px;
+    gap: 10px;
+  }
+  .perm-mock .doc-ico {
+    width: 22px;
+    height: 22px;
+    font-size: 10px;
+  }
+  .perm-mock .doc-name {
+    font-size: 12.5px;
+  }
+  .perm-mock .doc-status {
+    font-size: 10.5px;
+    padding: 2px 7px;
+    gap: 3px;
+  }
+
+  .sync-row {
+    grid-template-columns: 26px 1fr auto auto;
+    gap: 8px;
+    padding: 8px 2px;
+    font-size: 12.5px;
+  }
+  .sync-row .icoR {
+    width: 26px;
+    height: 26px;
+    font-size: 11px;
+  }
+  .sync-row .meta {
+    font-size: 10.5px;
+  }
+  .sync-flow {
+    padding: 10px;
+    font-size: 11px;
+  }
+  .sync-flow .flow-line .t {
+    font-size: 10px;
+  }
+
+  .thread-msg .ava {
+    width: 22px;
+    height: 22px;
+    font-size: 9.5px;
+  }
+  .thread-msg .bub {
+    font-size: 12.5px;
+    padding: 7px 11px;
+    line-height: 1.45;
+  }
+  .regen-bar {
+    margin-left: 30px;
+    flex-wrap: wrap;
+  }
+  .regen-bar button {
+    font-size: 10.5px;
+    padding: 3px 8px;
+  }
+}

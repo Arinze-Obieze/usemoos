@@ -2,22 +2,50 @@
 
 /* ───────────────────────────────────────────────────────────────────
    DESIGN TOKENS & GLOBAL CONFIGURATION
-   
-   This file ONLY contains:
-   - Design token CSS variables
-   - Base element resets via @layer base
-   - Global animations via @layer utilities
-   
-   Component-specific styles belong in component files using:
-   - Tailwind utility classes in JSX
-   - @layer components in component CSS files for complex patterns
+
+   Structure:
+   - @theme          → Tailwind v4 token wiring (generates bg-*, text-*, etc.)
+   - @layer base     → CSS resets + :root short aliases for CSS Modules
+   - @layer components → Shared layout primitives used across all components
+   - @layer utilities → Global keyframes + animation helpers
 ─────────────────────────────────────────────────────────────────── */
 
+/* ─── Tailwind token wiring ─── */
+@theme {
+  /* Colors — generates bg-ink, text-accent, border-line, etc. */
+  --color-bg: #fbfaf6;
+  --color-bg-2: #f4f2ea;
+  --color-surface: #ffffff;
+  --color-surface-2: #f6f5ee;
+  --color-line: #e8e5da;
+  --color-line-2: #d2cebe;
+  --color-ink: #0f1108;
+  --color-ink-2: #2f3128;
+  --color-muted: #6e7065;
+  --color-dim: #adb0a4;
+  --color-accent: #c8ff7b;
+  --color-accent-2: #a6e04d;
+  --color-accent-ink: #2a3f0c;
+  --color-danger: #b5311e;
+  --color-warning: #b07a1e;
 
+  /* Typography — overrides Tailwind defaults; generates font-sans, font-mono */
+  --font-sans:
+    var(--font-geist-sans), "Inter", -apple-system, BlinkMacSystemFont,
+    sans-serif;
+  --font-mono:
+    var(--font-geist-mono), "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+
+  /* Border radius — generates rounded-sm, rounded, rounded-lg, rounded-xl */
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+}
 
 @layer base {
   :root {
-    /* ─── Colors ─── */
+    /* ─── Colors (short aliases for CSS Modules: var(--bg), var(--ink), etc.) ─── */
     --bg: #fbfaf6;
     --bg-2: #f4f2ea;
     --surface: #ffffff;
@@ -106,6 +134,183 @@
 
   input {
     font-family: inherit;
+  }
+}
+
+/* ─── Shared layout primitives ─── */
+@layer components {
+  /* Max-width container */
+  .wrap {
+    width: 100%;
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 28px;
+
+    @media (max-width: 600px) {
+      padding: 0 18px;
+    }
+  }
+
+  /* Section vertical rhythm */
+  .sec {
+    padding: 110px 0;
+
+    @media (max-width: 900px) {
+      padding: 80px 0;
+    }
+    @media (max-width: 600px) {
+      padding: 60px 0;
+    }
+  }
+
+  /* Section header block */
+  .sec-head {
+    max-width: 720px;
+    margin-bottom: 56px;
+
+    @media (max-width: 900px) {
+      margin-bottom: 40px;
+    }
+    @media (max-width: 600px) {
+      margin-bottom: 32px;
+    }
+  }
+
+  .sec-head.centered {
+    text-align: center;
+    margin-inline: auto;
+  }
+
+  /* Section tag (mono label with decorative line) */
+  .sec-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent-ink);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+
+    &::before {
+      content: "";
+      width: 14px;
+      height: 2px;
+      background: var(--accent-ink);
+      flex-shrink: 0;
+    }
+  }
+
+  /* Section title */
+  .sec-title {
+    font-size: clamp(34px, 4.2vw, 54px);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    font-weight: 600;
+    margin-bottom: 18px;
+    text-wrap: balance;
+  }
+
+  /* Section subtitle */
+  .sec-sub {
+    font-size: 18px;
+    color: var(--ink-2);
+    line-height: 1.55;
+    max-width: 60ch;
+    text-wrap: pretty;
+  }
+
+  .sec-head.centered .sec-tag {
+    justify-content: center;
+  }
+
+  .sec-head.centered .sec-sub {
+    margin-inline: auto;
+  }
+
+  /* Gradient underline highlight for <em> elements */
+  .em-underline {
+    font-style: normal;
+    display: inline-block;
+    position: relative;
+    background: linear-gradient(
+      180deg,
+      transparent 62%,
+      var(--accent) 62%,
+      var(--accent) 94%,
+      transparent 94%
+    );
+    padding: 0 0.06em;
+  }
+
+  /* Solid accent badge for <em> elements (stat numbers, outcomes) */
+  .em-badge {
+    font-style: normal;
+    background: var(--accent);
+    color: var(--accent-ink);
+    padding: 0 0.12em;
+    border-radius: 4px;
+  }
+
+  /* ─── Buttons ─── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 38px;
+    padding: 0 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    white-space: nowrap;
+    transition:
+      transform 0.1s,
+      background 0.15s,
+      color 0.15s,
+      border-color 0.15s,
+      box-shadow 0.15s;
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--bg);
+    box-shadow: var(--shadow-sm);
+
+    &:hover {
+      background: var(--ink-2);
+      box-shadow: var(--shadow-md);
+    }
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
+  .btn-ghost {
+    color: var(--ink-2);
+    background: transparent;
+
+    &:hover {
+      color: var(--ink);
+      background: var(--surface-2);
+    }
+  }
+
+  .btn-outline {
+    color: var(--ink);
+    border: 1px solid var(--line);
+    background: var(--surface);
+
+    &:hover {
+      border-color: var(--line-2);
+    }
+  }
+
+  .btn-lg {
+    height: 48px;
+    padding: 0 22px;
+    font-size: 15px;
+    border-radius: 10px;
   }
 }
 

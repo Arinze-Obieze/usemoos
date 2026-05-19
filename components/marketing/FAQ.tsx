@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import styles from "./Marketing.module.css";
-import { cx } from "./styleUtils";
 
 const faqs = [
   {
@@ -35,18 +33,13 @@ export default function FAQ() {
   const [open, setOpen] = useState<number>(0);
 
   return (
-    <section className={cx(styles, "sec")} id="faq">
-      <div className={cx(styles, "wrap")}>
-        <div className={cx(styles, "faq-grid")}>
+    <section className="sec" id="faq">
+      <div className="wrap">
+        <div className="grid grid-cols-[1fr_1.4fr] gap-16 max-[900px]:grid-cols-1 max-[900px]:gap-7">
           <div>
-            <div className={cx(styles, "sec-tag")}>FAQ</div>
-            <h2
-              className={cx(styles, "sec-title")}
-              style={{ marginBottom: "14px" }}
-            >
-              Quick answers.
-            </h2>
-            <p className={cx(styles, "sec-sub")}>
+            <div className="sec-tag">FAQ</div>
+            <h2 className="sec-title mb-[14px]">Quick answers.</h2>
+            <p className="sec-sub">
               Have something else on your mind? Add it when you join the
               waitlist and we will reply.
             </p>
@@ -55,18 +48,20 @@ export default function FAQ() {
             {faqs.map((faq, i) => (
               <div
                 key={faq.q}
-                className={cx(styles, "faq-item")}
+                className="border-t border-line last:border-b last:border-line group/item"
                 data-open={open === i ? "true" : "false"}
               >
                 <button
-                  className={cx(styles, "faq-q")}
+                  className="w-full text-left flex justify-between items-center gap-4 py-[22px] text-[17px] font-medium tracking-[-0.01em] text-ink max-[600px]:text-[16px] max-[600px]:py-[18px] group/btn"
                   type="button"
                   onClick={() => setOpen(open === i ? -1 : i)}
                 >
                   {faq.q}
-                  <span className={cx(styles, "pm")}>+</span>
+                  <span className="text-[18px] text-muted shrink-0 [transition:transform_0.25s,color_0.2s] group-hover/btn:text-ink group-data-[open=true]/item:rotate-45 group-data-[open=true]/item:text-accent-ink">
+                    +
+                  </span>
                 </button>
-                <div className={cx(styles, "faq-a")}>
+                <div className="max-h-0 overflow-hidden [transition:max-height_0.3s,padding_0.2s] text-[15px] text-ink-2 leading-[1.6] group-data-[open=true]/item:max-h-[300px] group-data-[open=true]/item:pb-[22px] max-[600px]:text-[14.5px]">
                   <p>{faq.a}</p>
                 </div>
               </div>

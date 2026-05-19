@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import styles from "./Marketing.module.css";
+import styles from "./Features.module.css";
 import { cx } from "./styleUtils";
 
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));

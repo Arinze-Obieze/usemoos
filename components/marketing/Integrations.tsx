@@ -16,8 +16,6 @@ import {
   SiSalesforce,
   SiZendesk,
 } from "react-icons/si";
-import styles from "./Marketing.module.css";
-import { cx } from "./styleUtils";
 
 const integrations = [
   { bg: "#4A154B", icon: FaSlack, name: "Slack" },
@@ -39,34 +37,45 @@ const integrations = [
 
 export default function Integrations() {
   return (
-    <section className={cx(styles, "int-section sec")} id="integrations">
-      <div className={cx(styles, "wrap")}>
-        <div className={cx(styles, "sec-head centered")}>
-          <div className={cx(styles, "sec-tag")}>Integrations</div>
-          <h2 className={cx(styles, "sec-title")}>
-            Connect once. <em>Everything&apos;s in scope</em>.
+    <section
+      className="sec bg-surface border-t border-b border-line"
+      id="integrations"
+    >
+      <div className="wrap">
+        <div className="sec-head centered">
+          <div className="sec-tag">Integrations</div>
+          <h2 className="sec-title">
+            Connect once.{" "}
+            <em className="em-underline">Everything&apos;s in scope</em>.
           </h2>
-          <p className={cx(styles, "sec-sub")}>
+          <p className="sec-sub">
             Native, two-way integrations with the systems your team already
             trusts. New connectors ship every month based on customer demand.
           </p>
         </div>
-        <div className={cx(styles, "int-grid")}>
+        <div className="grid grid-cols-8 gap-[10px] max-[900px]:grid-cols-4 max-[600px]:grid-cols-3 max-[600px]:gap-2 max-[440px]:grid-cols-3">
           {integrations.map((int) => {
             const Icon = int.icon;
             return (
-              <div key={int.name} className={cx(styles, "int")}>
+              <div
+                key={int.name}
+                className="aspect-square bg-surface border border-line rounded-[12px] flex flex-col items-center justify-center gap-2 transition-[border-color,transform,box-shadow] duration-[180ms] hover:border-line-2 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] max-[600px]:rounded-[10px] max-[600px]:gap-[6px] max-[440px]:aspect-[1.05]"
+              >
                 <div
-                  className={cx(styles, "int-ico")}
+                  className="w-8 h-8 rounded-[7px] grid place-items-center font-bold text-[13px] text-white max-[600px]:w-7 max-[600px]:h-7 max-[600px]:text-[12px]"
                   style={{ background: int.bg }}
                 >
-                  <Icon />
+                  <Icon className="text-[16px] max-[600px]:text-[14px]" />
                 </div>
-                <div className={cx(styles, "nm")}>{int.name}</div>
+                <div className="text-[12px] text-ink-2 font-medium max-[600px]:text-[11px]">
+                  {int.name}
+                </div>
               </div>
             );
           })}
-          <div className={cx(styles, "int more")}>+ 18 more</div>
+          <div className="aspect-square bg-transparent border border-dashed border-line rounded-[12px] flex flex-col items-center justify-center text-muted font-mono text-[13px] max-[600px]:rounded-[10px] max-[440px]:aspect-[1.05]">
+            + 18 more
+          </div>
         </div>
       </div>
     </section>

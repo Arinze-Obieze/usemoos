@@ -1,12 +1,9 @@
-import styles from "./Marketing.module.css";
-import { cx } from "./styleUtils";
-
 const benefits = [
   {
     role: "For everyone",
     outcome: (
       <>
-        <em>~9h</em>/mo
+        <em className="em-badge">~9h</em>/mo
       </>
     ),
     heading: "Time reclaimed per employee.",
@@ -21,7 +18,7 @@ const benefits = [
     role: "For new hires",
     outcome: (
       <>
-        <em>50%</em>
+        <em className="em-badge">50%</em>
       </>
     ),
     heading: "Faster ramp to first impact.",
@@ -36,7 +33,7 @@ const benefits = [
     role: "For managers",
     outcome: (
       <>
-        <em>−72%</em>
+        <em className="em-badge">−72%</em>
       </>
     ),
     heading: "Fewer repeat questions in your DMs.",
@@ -51,7 +48,7 @@ const benefits = [
     role: "For operations",
     outcome: (
       <>
-        <em>1</em> place
+        <em className="em-badge">1</em> place
       </>
     ),
     heading: "End the tab-switching tax.",
@@ -66,7 +63,7 @@ const benefits = [
     role: "For leadership",
     outcome: (
       <>
-        <em>0</em> loss
+        <em className="em-badge">0</em> loss
       </>
     ),
     heading: "Institutional knowledge stays.",
@@ -81,7 +78,7 @@ const benefits = [
     role: "For decision makers",
     outcome: (
       <>
-        <em>100%</em>
+        <em className="em-badge">100%</em>
       </>
     ),
     heading: "Decisions backed by the live source.",
@@ -96,32 +93,47 @@ const benefits = [
 
 export default function Benefits() {
   return (
-    <section className={cx(styles, "sec")} id="benefits">
-      <div className={cx(styles, "wrap")}>
-        <div className={cx(styles, "sec-head centered")}>
-          <div className={cx(styles, "sec-tag")}>Why teams join</div>
-          <h2 className={cx(styles, "sec-title")}>
-            Six hours of meetings, gone. <em>Every week, per person.</em>
+    <section className="sec" id="benefits">
+      <div className="wrap">
+        <div className="sec-head centered">
+          <div className="sec-tag">Why teams join</div>
+          <h2 className="sec-title">
+            Six hours of meetings, gone.{" "}
+            <em className="em-underline">Every week, per person.</em>
           </h2>
-          <p className={cx(styles, "sec-sub")}>
+          <p className="sec-sub">
             What changes when your org&apos;s knowledge stops being a scavenger
             hunt. Outcomes are drawn directly from how teams already use usemoos
             in the private beta.
           </p>
         </div>
-        <div className={cx(styles, "benefits-grid")}>
+        <div className="grid grid-cols-3 gap-3 max-[900px]:grid-cols-2 max-[600px]:grid-cols-1">
           {benefits.map((b) => (
-            <div key={b.heading} className={cx(styles, "benefit")}>
-              <div className={cx(styles, "role")}>{b.role}</div>
-              <div className={cx(styles, "outcome")}>{b.outcome}</div>
-              <h4>{b.heading}</h4>
-              <p>{b.body}</p>
-              <div className={cx(styles, "src")}>{b.src}</div>
+            <div
+              key={b.heading}
+              className="relative p-8 bg-surface border border-line rounded-[16px] flex flex-col transition-[border-color,transform,box-shadow] duration-[180ms] hover:border-line-2 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] max-[900px]:py-[28px] max-[900px]:px-[22px] max-[600px]:py-6 max-[600px]:px-5"
+            >
+              <div className="font-mono text-[10.5px] tracking-[0.08em] uppercase text-muted mb-[22px] flex items-center gap-[6px]">
+                <span className="w-[5px] h-[5px] rounded-full bg-accent-2 shrink-0" />
+                {b.role}
+              </div>
+              <div className="text-[42px] font-semibold tracking-[-0.03em] leading-none mb-[14px] text-ink max-[900px]:text-[36px] max-[600px]:text-[32px]">
+                {b.outcome}
+              </div>
+              <h4 className="text-[17px] font-semibold tracking-[-0.015em] text-ink mb-2 max-[600px]:text-[16px]">
+                {b.heading}
+              </h4>
+              <p className="text-[14.5px] text-ink-2 leading-[1.5] mb-[18px] [text-wrap:pretty] max-[600px]:text-[14px]">
+                {b.body}
+              </p>
+              <div className="mt-auto font-mono text-[11px] text-muted pt-[14px] border-t border-line [&_b]:text-ink-2 [&_b]:font-medium max-[600px]:text-[10.5px] max-[600px]:pt-3">
+                {b.src}
+              </div>
             </div>
           ))}
         </div>
-        <div style={{ textAlign: "center", marginTop: "48px" }}>
-          <a className={cx(styles, "btn btn-primary btn-lg")} href="#waitlist">
+        <div className="text-center mt-12">
+          <a className="btn btn-primary btn-lg" href="#waitlist">
             Get early access →
           </a>
         </div>

@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import styles from "./Marketing.module.css";
-import { cx } from "./styleUtils";
 
 const stats = [
   {
@@ -63,18 +61,27 @@ export default function StatsBand() {
   }, []);
 
   return (
-    <section className={cx(styles, "stats-band")} ref={bandRef}>
-      <div className={cx(styles, "wrap")}>
-        <div className={cx(styles, "stats-grid")}>
+    <section className="border-t border-b border-line bg-surface" ref={bandRef}>
+      <div className="wrap">
+        <div className="grid grid-cols-3 max-[900px]:grid-cols-1">
           {stats.map((s) => (
-            <div key={s.label} className={cx(styles, "stat")}>
-              <div className={cx(styles, "num")}>
-                <em data-target={s.target} data-decimals={s.decimals}>
+            <div
+              key={s.label}
+              className="py-[44px] px-8 border-r border-line last:border-r-0 max-[900px]:border-r-0 max-[900px]:border-b max-[900px]:last:border-b-0 max-[900px]:py-8 max-[900px]:px-[22px] max-[600px]:py-7 max-[600px]:px-[18px]"
+            >
+              <div className="text-[clamp(40px,4vw,56px)] tracking-[-0.03em] font-semibold leading-none max-[600px]:text-[36px]">
+                <em
+                  className="em-badge"
+                  data-target={s.target}
+                  data-decimals={s.decimals}
+                >
                   0
                 </em>
                 {s.suffix}
               </div>
-              <div className={cx(styles, "lbl")}>{s.label}</div>
+              <div className="mt-[14px] text-[14.5px] text-muted leading-[1.45] max-w-[32ch] max-[600px]:text-[13.5px]">
+                {s.label}
+              </div>
             </div>
           ))}
         </div>

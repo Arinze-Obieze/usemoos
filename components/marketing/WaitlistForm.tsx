@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import styles from "./Marketing.module.css";
-import { cx } from "./styleUtils";
 
 interface WaitlistFormProps {
   id: string;
@@ -51,10 +49,14 @@ export default function WaitlistForm({
 
   if (submitted) {
     return (
-      <div className={cx(styles, "waitlist-ok show")} style={style}>
-        <span className={cx(styles, "check")}>✓</span>
+      <div
+        className="flex justify-center items-center gap-3 max-w-[460px] mx-auto px-[22px] py-[14px] bg-accent border border-accent-2 rounded-full text-accent-ink text-[14px] font-medium max-[440px]:rounded-[14px] max-[440px]:max-w-full max-[440px]:px-[18px]"
+        style={style}
+      >
+        <span className="w-5 h-5 shrink-0 rounded-full bg-accent-ink text-accent grid place-items-center font-bold text-[11px]">
+          ✓
+        </span>
         <span>
-          {/* eslint-disable-next-line react/no-danger */}
           You&apos;re in line. We&apos;ll email <b>{submittedEmail}</b> when a
           slot opens.
         </span>
@@ -65,13 +67,14 @@ export default function WaitlistForm({
   return (
     <>
       <form
-        className={cx(styles, "waitlist")}
+        className="flex gap-[6px] max-w-[460px] mx-auto p-[5px] bg-surface border border-line rounded-full shadow-[var(--shadow-md)] transition-[border-color,box-shadow] duration-150 focus-within:border-ink focus-within:shadow-[var(--shadow-lg)] max-[440px]:flex-col max-[440px]:rounded-[14px] max-[440px]:p-2 max-[440px]:gap-2 max-[440px]:max-w-full"
         data-id={id}
         noValidate
         onSubmit={handleSubmit}
         style={style}
       >
         <input
+          className="flex-1 min-w-0 bg-transparent border-0 outline-none px-4 text-[15px] text-ink placeholder:text-muted max-[440px]:w-full max-[440px]:px-[14px] max-[440px]:py-[10px] max-[440px]:bg-bg-2 max-[440px]:rounded-[8px]"
           type="email"
           name="email"
           placeholder="you@company.com"
@@ -83,17 +86,23 @@ export default function WaitlistForm({
             setShowErr(false);
           }}
         />
-        <button type="submit" disabled={loading}>
+        <button
+          className="h-[42px] px-[18px] bg-ink text-bg rounded-full text-[14px] font-semibold transition-[background] duration-150 hover:bg-ink-2 disabled:opacity-70 max-[440px]:w-full max-[440px]:rounded-[8px] max-[440px]:h-11"
+          type="submit"
+          disabled={loading}
+        >
           {loading ? "Joining…" : buttonLabel}
         </button>
       </form>
       <div
-        className={cx(styles, "waitlist-err", showErr && "show")}
+        className={`mt-[10px] font-mono text-[12.5px] text-danger ${showErr ? "visible" : "invisible"}`}
         data-err={id}
       >
         ↳ that doesn&apos;t look like a valid email
       </div>
-      <div className={cx(styles, "waitlist-err", serverErr && "show")}>
+      <div
+        className={`mt-[10px] font-mono text-[12.5px] text-danger ${serverErr ? "visible" : "invisible"}`}
+      >
         ↳ something went wrong, please try again
       </div>
     </>

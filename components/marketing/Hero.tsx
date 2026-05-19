@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import styles from "./Marketing.module.css";
+import styles from "./Hero.module.css";
 import { cx } from "./styleUtils";
 import WaitlistForm from "./WaitlistForm";
 
