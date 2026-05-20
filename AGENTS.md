@@ -2,7 +2,7 @@
 # This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
+
 
 ---
 
@@ -560,3 +560,4 @@ to the browser — if a variable does not have the `NEXT_PUBLIC_` prefix it is s
 - Do not make API calls without the current workspace context attached.
 - Do not duplicate type definitions that belong in `packages/types`.
 
+<!-- END:nextjs-agent-rules -->

@@ -38,7 +38,7 @@ export default function FAQ() {
         <div className="grid grid-cols-[1fr_1.4fr] gap-16 max-[900px]:grid-cols-1 max-[900px]:gap-7">
           <div>
             <div className="sec-tag">FAQ</div>
-            <h2 className="sec-title mb-[14px]">Quick answers.</h2>
+            <h2 className="sec-title mb-3.5">Quick answers.</h2>
             <p className="sec-sub">
               Have something else on your mind? Add it when you join the
               waitlist and we will reply.
@@ -52,7 +52,7 @@ export default function FAQ() {
                 data-open={open === i ? "true" : "false"}
               >
                 <button
-                  className="w-full text-left flex justify-between items-center gap-4 py-[22px] text-[17px] font-medium tracking-[-0.01em] text-ink max-[600px]:text-[16px] max-[600px]:py-[18px] group/btn"
+                  className="w-full text-left flex justify-between items-center gap-4 py-5.5 text-[17px] font-medium tracking-[-0.01em] text-ink max-[600px]:text-[16px] max-[600px]:py-[18px] group/btn"
                   type="button"
                   onClick={() => setOpen(open === i ? -1 : i)}
                 >

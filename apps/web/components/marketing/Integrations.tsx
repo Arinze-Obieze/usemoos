@@ -53,13 +53,13 @@ export default function Integrations() {
             trusts. New connectors ship every month based on customer demand.
           </p>
         </div>
-        <div className="grid grid-cols-8 gap-[10px] max-[900px]:grid-cols-4 max-[600px]:grid-cols-3 max-[600px]:gap-2 max-[440px]:grid-cols-3">
+        <div className="grid grid-cols-8 gap-2.5 max-[900px]:grid-cols-4 max-[600px]:grid-cols-3 max-[600px]:gap-2 max-[440px]:grid-cols-3">
           {integrations.map((int) => {
             const Icon = int.icon;
             return (
               <div
                 key={int.name}
-                className="aspect-square bg-surface border border-line rounded-[12px] flex flex-col items-center justify-center gap-2 transition-[border-color,transform,box-shadow] duration-[180ms] hover:border-line-2 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] max-[600px]:rounded-[10px] max-[600px]:gap-[6px] max-[440px]:aspect-[1.05]"
+                className="aspect-square bg-surface border border-line rounded-[12px] flex flex-col items-center justify-center gap-2 transition-[border-color,transform,box-shadow] duration-[180ms] hover:border-line-2 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] max-[600px]:rounded-[10px] max-[600px]:gap-1.5 max-[440px]:aspect-[1.05]"
               >
                 <div
                   className="w-8 h-8 rounded-[7px] grid place-items-center font-bold text-[13px] text-white max-[600px]:w-7 max-[600px]:h-7 max-[600px]:text-[12px]"

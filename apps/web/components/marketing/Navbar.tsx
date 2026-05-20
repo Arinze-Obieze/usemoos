@@ -41,7 +41,7 @@ export default function Navbar() {
       }}
     >
       <div className="wrap flex items-center justify-between h-16 max-[900px]:h-[58px]">
-        <a href="/" className="flex items-center gap-[10px] max-[600px]:gap-2">
+        <a href="/" className="flex items-center gap-2.5 max-[600px]:gap-2">
           <Image
             src="/assets/usemoos_icon.png"
             width={32}
@@ -66,7 +66,7 @@ export default function Navbar() {
           ))}
         </div>
 
-        <div className="flex gap-[10px] items-center max-[900px]:hidden">
+        <div className="flex gap-2.5 items-center max-[900px]:hidden">
           <a className="btn btn-primary" href="#waitlist">
             Request access →
           </a>

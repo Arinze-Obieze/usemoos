@@ -63,10 +63,7 @@ export default function Hero() {
           Your company&apos;s <em>collective brain</em>, finally searchable.
         </h1>
         <p className={cx(styles, "subhead")}>
-          Stop losing two hours a day to &ldquo;where&rsquo;s the doc
-          on...?&rdquo; usemoos connects Slack, Notion, Drive, GitHub, Jira,
-          Confluence and 12+ other tools into one conversational workspace, with
-          every answer cited and permission-checked.
+          Stop losing hours searching across disconnected tools. usemoos creates a unified intelligence layer over Slack, Notion, Drive and more, delivering instant answers with trusted citations.
         </p>
         <WaitlistForm id="hero" style={{ margin: "0 auto 14px" }} />
         <div className={cx(styles, "hero-trust")}>
@@ -338,13 +335,13 @@ async function playHeroMockup(root: HTMLElement) {
   const ctxs = root.querySelectorAll<HTMLElement>(`.${styles.ctx}`);
   const aiBody = root.querySelector<HTMLElement>("#hero-ai-body");
 
-  await sleep(300);
+  await sleep(150);
   messages[0]?.classList.add(styles.in);
 
-  await sleep(700);
+  await sleep(350);
   messages[1]?.classList.add(styles.in);
 
-  await sleep(1400);
+  await sleep(600);
   if (aiBody) {
     aiBody.innerHTML = `<div style="display:flex;flex-direction:column;gap:6px"><div>Here&rsquo;s what the docs say about enterprise refunds:</div><div style="display:flex;gap:6px;align-items:baseline"><span class="${styles.cit}">1</span><span>Annual contracts are <b>non-refundable after 30 days</b>, but customers may pause service for up to 90 days within the term.</span></div><div style="display:flex;gap:6px;align-items:baseline"><span class="${styles.cit}">2</span><span>Exceptions above <b>$10,000</b> require sign-off from the <b>VP of Finance</b> per the March approvals matrix.</span></div><div style="display:flex;gap:6px;align-items:baseline"><span class="${styles.cit}">3</span><span>Deals over <b>$50,000</b> additionally require Legal to approve before the credit memo is issued.</span></div></div>
       <div class="${styles.sources}">
@@ -355,20 +352,20 @@ async function playHeroMockup(root: HTMLElement) {
 
     const cits = aiBody.querySelectorAll<HTMLElement>(`.${styles.cit}`);
     for (const cit of cits) {
-      await sleep(180);
+      await sleep(80);
       cit.classList.add(styles.in);
     }
-    await sleep(150);
+    await sleep(80);
     const srcs = aiBody.querySelectorAll<HTMLElement>(`.${styles["src-chip"]}`);
     for (const src of srcs) {
-      await sleep(120);
+      await sleep(60);
       src.classList.add(styles.in);
     }
   }
 
-  await sleep(300);
+  await sleep(150);
   for (const ctx of ctxs) {
-    await sleep(180);
+    await sleep(80);
     ctx.classList.add(styles.in);
   }
 }

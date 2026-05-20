@@ -37,7 +37,7 @@ function LinkColumn({
       <h5 className="font-mono text-[11px] tracking-[0.1em] uppercase text-dim mb-4 font-medium">
         {title}
       </h5>
-      <ul className="flex flex-col gap-[10px] max-[600px]:gap-2 max-[600px]:items-center">
+      <ul className="flex flex-col gap-2.5 max-[600px]:gap-2 max-[600px]:items-center">
         {links.map((l) => (
           <li key={l.label}>
             <a
@@ -59,7 +59,7 @@ export default function Footer() {
       <div className="wrap pt-16 pb-8 max-[600px]:pt-12 max-[600px]:pb-6">
         <div className="grid grid-cols-[1.6fr_1fr_1fr_1fr] gap-10 mb-12 max-[900px]:grid-cols-2 max-[900px]:gap-8 max-[600px]:grid-cols-2 max-[600px]:gap-[30px_22px] max-[600px]:mb-8 max-[440px]:gap-[26px_18px] [&>*]:min-w-0">
           <div className="max-[600px]:col-span-full">
-            <div className="flex items-center gap-[10px] max-[600px]:justify-center">
+            <div className="flex items-center gap-2.5 max-[600px]:justify-center">
               <Image
                 src="/assets/usemoos-icon.svg"
                 width={36}

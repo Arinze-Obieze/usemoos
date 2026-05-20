@@ -113,11 +113,11 @@ export default function Benefits() {
               key={b.heading}
               className="relative p-8 bg-surface border border-line rounded-[16px] flex flex-col transition-[border-color,transform,box-shadow] duration-[180ms] hover:border-line-2 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] max-[900px]:py-[28px] max-[900px]:px-[22px] max-[600px]:py-6 max-[600px]:px-5"
             >
-              <div className="font-mono text-[10.5px] tracking-[0.08em] uppercase text-muted mb-[22px] flex items-center gap-[6px]">
+              <div className="font-mono text-[10.5px] tracking-[0.08em] uppercase text-muted mb-[22px] flex items-center gap-1.5">
                 <span className="w-[5px] h-[5px] rounded-full bg-accent-2 shrink-0" />
                 {b.role}
               </div>
-              <div className="text-[42px] font-semibold tracking-[-0.03em] leading-none mb-[14px] text-ink max-[900px]:text-[36px] max-[600px]:text-[32px]">
+              <div className="text-[42px] font-semibold tracking-[-0.03em] leading-none mb-3.5 text-ink max-[900px]:text-[36px] max-[600px]:text-[32px]">
                 {b.outcome}
               </div>
               <h4 className="text-[17px] font-semibold tracking-[-0.015em] text-ink mb-2 max-[600px]:text-[16px]">
