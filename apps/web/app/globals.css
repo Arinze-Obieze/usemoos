@@ -28,6 +28,7 @@
   --color-accent-ink: #2a3f0c;
   --color-danger: #b5311e;
   --color-warning: #b07a1e;
+  --color-ink-3: #565951;
 
   /* Typography — overrides Tailwind defaults; generates font-sans, font-mono */
   --font-sans:
@@ -88,6 +89,22 @@
     --r: 10px;
     --r-lg: 16px;
     --r-xl: 24px;
+
+    /* ─── Workspace extras (new tokens not covered above) ─── */
+    --ink-3: #565951;
+    --surface-3: #e8e8df;
+    --bg-3: #ecece3;
+    --line-3: #bec0b4;
+    --accent-3: #88c027;
+    --accent-soft: rgba(166, 224, 77, 0.18);
+    --accent-glow: rgba(166, 224, 77, 0.55);
+    --warning-soft: rgba(176, 122, 30, 0.12);
+    --danger-soft: rgba(181, 49, 30, 0.1);
+
+    /* ─── Workspace layout sizing ─── */
+    --side-w: 256px;
+    --rail-w: 320px;
+    --top-h: 56px;
   }
 
   /* Base element resets */
@@ -179,6 +196,11 @@
   .sec-head.centered {
     text-align: center;
     margin-inline: auto;
+
+    @media (max-width: 600px) {
+      text-align: left;
+      margin-inline: 0;
+    }
   }
 
   /* Section tag (mono label with decorative line) */
@@ -223,10 +245,16 @@
 
   .sec-head.centered .sec-tag {
     justify-content: center;
+    @media (max-width: 600px) {
+      justify-content: flex-start;
+    }
   }
 
   .sec-head.centered .sec-sub {
     margin-inline: auto;
+    @media (max-width: 600px) {
+      margin-inline: 0;
+    }
   }
 
   /* Gradient underline highlight for <em> elements */
@@ -312,6 +340,52 @@
     font-size: 15px;
     border-radius: 10px;
   }
+
+  /* ─── Workspace app shell layout ─── */
+  .ws-shell {
+    display: grid;
+    grid-template-columns: var(--side-w) 1fr;
+    grid-template-rows: 1fr;
+    height: 100dvh;
+    width: 100vw;
+    overflow: hidden;
+    background: var(--bg-2);
+    transition: grid-template-columns 0.22s ease;
+  }
+  @media (min-width: 901px) {
+    .ws-shell--compact { grid-template-columns: 64px 1fr; }
+    .ws-shell--none    { grid-template-columns: 0 1fr; }
+  }
+  @media (max-width: 900px) {
+    .ws-shell { grid-template-columns: 64px 1fr; }
+  }
+  @media (max-width: 600px) {
+    .ws-shell { grid-template-columns: 1fr; }
+  }
+
+  /* Force rail column off on tablet — overrides the JS-set inline style */
+  @media (max-width: 900px) {
+    .ws-main { grid-template-columns: 1fr !important; }
+  }
+
+  /* ─── Source brand identity swatches (used by SrcIcon across all workspace screens) ─── */
+  .src-notion    { background: #f5f2ec; color: #1e1a14; }
+  .src-slack     { background: #f8e9f5; color: #6e1f62; }
+  .src-drive     { background: #e8f0fd; color: #1a56c2; }
+  .src-github    { background: #1f2328; color: #fff; }
+  .src-linear    { background: #e9eaf7; color: #4752c2; }
+  .src-jira      { background: #e1ecfb; color: #0747a6; }
+  .src-confluence{ background: #e1ecfb; color: #0747a6; }
+  .src-figma     { background: #f5e9e5; color: #b5311e; }
+  .src-zendesk   { background: #e5f0eb; color: #03522d; }
+  .src-hubspot   { background: #fce6da; color: #c2451b; }
+  .src-salesforce{ background: #e1f0fb; color: #00a1e0; }
+  .src-teams     { background: #e8e9f8; color: #4b53bc; }
+  .src-dropbox   { background: #e5f0fa; color: #0061ff; }
+  .src-asana     { background: #fce4e4; color: #c0392b; }
+  .src-clickup   { background: #f1e6f7; color: #7c2bb7; }
+  .src-sharepoint{ background: #deeff7; color: #036c70; }
+  .src-trello    { background: #dceefa; color: #0079bf; }
 }
 
 /* ─── Global Animations ─── */

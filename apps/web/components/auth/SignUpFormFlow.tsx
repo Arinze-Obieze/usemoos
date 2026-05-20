@@ -1,18 +1,19 @@
 "use client";
-import { useState } from "react";
 import { useSignUp } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { SSOButtons } from "@/components/auth/SSOButtons";
-import { OrDivider } from "@/components/auth/OrDivider";
+import { useState } from "react";
 import { Field } from "@/components/auth/Field";
+import { OrDivider } from "@/components/auth/OrDivider";
+import { SSOButtons } from "@/components/auth/SSOButtons";
+import { usePostAuthNavigation } from "@/components/auth/usePostAuthNavigation";
 import { VerifyInbox } from "@/components/auth/VerifyInbox";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { getClerkError } from "@/lib/clerkError";
 
 type Mode = "form" | "verify";
+type AuthProvider = "oauth_google" | "oauth_microsoft";
 
 const emHighlight: React.CSSProperties = {
   background:
@@ -20,11 +21,10 @@ const emHighlight: React.CSSProperties = {
   padding: "0 0.06em",
 };
 
-
 // ── Sign-up form ──────────────────────────────────────────────────────
 
 function SignUpForm({ onVerify }: { onVerify: () => void }) {
-  const { signUp, isLoaded, setActive } = useSignUp();
+  const { signUp, fetchStatus } = useSignUp();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [workspace, setWorkspace] = useState("");
@@ -32,43 +32,59 @@ function SignUpForm({ onVerify }: { onVerify: () => void }) {
   const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const navigateAfterAuth = usePostAuthNavigation();
+  const isBusy = loading || fetchStatus === "fetching";
 
-  const handleSSO = async (provider: "oauth_google" | "oauth_microsoft") => {
-    if (!isLoaded) return;
+  const handleSSO = async (provider: AuthProvider) => {
+    setLoading(true);
+    setError("");
     try {
-      await signUp!.authenticateWithRedirect({
+      const { error } = await signUp.sso({
         strategy: provider,
-        redirectUrl: "/sign-in/sso-callback",
-        redirectUrlComplete: "/workspace",
+        redirectCallbackUrl: "/sign-in/sso-callback",
+        redirectUrl: "/workspace",
       });
+      if (error) setError(getClerkError(error));
     } catch (err) {
       setError(getClerkError(err));
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isLoaded) {
-      setError("Auth is still loading — please try again in a moment.");
+    if (!agreed) {
+      setError("Please accept the Terms and DPA to create a workspace.");
       return;
     }
     setLoading(true);
     setError("");
     try {
       const parts = name.trim().split(/\s+/);
-      const result = await signUp!.create({
+      const { error: createError } = await signUp.password({
         emailAddress: email,
         password,
         firstName: parts[0],
         lastName: parts.slice(1).join(" ") || undefined,
         unsafeMetadata: { workspace_name: workspace },
+        legalAccepted: true,
       });
-      if (result.status === "complete") {
-        await setActive!({ session: result.createdSessionId });
-        router.push("/workspace");
+      if (createError) {
+        setError(getClerkError(createError));
+        return;
+      }
+      if (signUp.status === "complete") {
+        await signUp.finalize({
+          navigate: navigateAfterAuth,
+        });
+        return;
+      }
+      const { error: sendCodeError } =
+        await signUp.verifications.sendEmailCode();
+      if (sendCodeError) {
+        setError(getClerkError(sendCodeError));
       } else {
-        await signUp!.prepareEmailAddressVerification({ strategy: "email_code" });
         onVerify();
       }
     } catch (err) {
@@ -82,20 +98,28 @@ function SignUpForm({ onVerify }: { onVerify: () => void }) {
     <>
       <div className="flex items-center gap-2 pl-1.25 pr-3 py-1 bg-surface border border-line rounded-full font-mono text-[11.5px] text-ink-2 mb-5.5 shadow-(--shadow-sm) w-fit">
         <span className="flex items-center gap-1.25 px-2 py-0.5 bg-accent text-accent-ink rounded-full text-[10px] font-bold tracking-[0.04em] uppercase">
-          <span className="w-1.25 h-1.25 rounded-full bg-accent-ink" aria-hidden="true" />
+          <span
+            className="w-1.25 h-1.25 rounded-full bg-accent-ink"
+            aria-hidden="true"
+          />
           Private beta
         </span>
         You&apos;ve been invited
       </div>
 
       <h1 className="text-[36px] leading-[1.05] tracking-tight font-semibold text-ink mb-3 text-wrap-balance">
-        Set up your <em className="not-italic" style={emHighlight}>workspace</em>.
+        Set up your{" "}
+        <em className="not-italic" style={emHighlight}>
+          workspace
+        </em>
+        .
       </h1>
       <p className="text-[15px] text-ink-2 leading-normal mb-8 text-wrap-pretty">
-        Takes about a minute. You can invite teammates and connect integrations right after.
+        Takes about a minute. You can invite teammates and connect integrations
+        right after.
       </p>
 
-      <SSOButtons onSelect={handleSSO} />
+      <SSOButtons onSelect={handleSSO} disabled={isBusy} />
       <OrDivider />
 
       <form onSubmit={handleSubmit}>
@@ -160,14 +184,14 @@ function SignUpForm({ onVerify }: { onVerify: () => void }) {
           >
             {"I accept the "}
             <a
-              href="#"
+              href="/terms"
               className="text-ink underline underline-offset-[3px] decoration-line-2 hover:decoration-ink [transition:text-decoration-color_0.15s]"
             >
               Terms
             </a>
             {" & "}
             <a
-              href="#"
+              href="/dpa"
               className="text-ink underline underline-offset-[3px] decoration-line-2 hover:decoration-ink [transition:text-decoration-color_0.15s]"
             >
               DPA
@@ -176,15 +200,19 @@ function SignUpForm({ onVerify }: { onVerify: () => void }) {
           </Label>
         </div>
 
-        {error && <p className="font-mono text-[12px] text-danger mb-3.5">{error}</p>}
+        {error && (
+          <p className="font-mono text-[12px] text-danger mb-3.5">{error}</p>
+        )}
 
-        <Button type="submit" size="lg" loading={loading} className="w-full">
+        <Button type="submit" size="lg" loading={isBusy} className="w-full">
           Create workspace <span>→</span>
         </Button>
+        <div id="clerk-captcha" />
       </form>
 
       <p className="text-[12px] text-muted mt-5.5 text-center leading-[1.45]">
-        SOC 2 in progress · Your workspace is isolated from every other tenant by default.
+        SOC 2 in progress · Your workspace is isolated from every other tenant
+        by default.
       </p>
     </>
   );
@@ -193,17 +221,21 @@ function SignUpForm({ onVerify }: { onVerify: () => void }) {
 // ── Orchestrator ──────────────────────────────────────────────────────
 
 export default function SignUpFormFlow() {
-  const { signUp, isLoaded, setActive } = useSignUp();
+  const { signUp } = useSignUp();
   const [mode, setMode] = useState<Mode>("form");
-  const router = useRouter();
+  const navigateAfterAuth = usePostAuthNavigation();
 
   const handleVerifySubmit = async (code: string) => {
-    if (!isLoaded) return;
     try {
-      const result = await signUp!.attemptEmailAddressVerification({ code });
-      if (result.status === "complete") {
-        await setActive!({ session: result.createdSessionId });
-        router.push("/workspace");
+      const { error } = await signUp.verifications.verifyEmailCode({ code });
+      if (error) {
+        throw new Error(getClerkError(error));
+      }
+      if (signUp.status === "complete") {
+        const { error: finalizeError } = await signUp.finalize({
+          navigate: navigateAfterAuth,
+        });
+        if (finalizeError) throw new Error(getClerkError(finalizeError));
       }
     } catch (err) {
       throw new Error(getClerkError(err));
@@ -211,9 +243,9 @@ export default function SignUpFormFlow() {
   };
 
   const handleVerifyResend = async () => {
-    if (!isLoaded) return;
     try {
-      await signUp!.prepareEmailAddressVerification({ strategy: "email_code" });
+      const { error } = await signUp.verifications.sendEmailCode();
+      if (error) throw new Error(getClerkError(error));
     } catch (err) {
       throw new Error(getClerkError(err));
     }

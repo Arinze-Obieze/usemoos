@@ -2,7 +2,7 @@ import * as React from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "default" | "outline" | "ghost";
-  size?: "default" | "lg";
+  size?: "default" | "lg" | "icon" | "icon-sm";
   loading?: boolean;
 }
 
@@ -11,12 +11,15 @@ const variantClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
     "bg-ink text-bg shadow-(--shadow-sm) hover:bg-ink-2 hover:shadow-(--shadow-md) active:translate-y-px [transition:background_0.15s,transform_0.08s,box-shadow_0.15s]",
   outline:
     "bg-surface border border-line text-ink hover:border-line-2 hover:bg-surface-2 active:translate-y-px [transition:border-color_0.15s,background_0.15s,transform_0.08s]",
-  ghost: "bg-transparent text-ink hover:bg-surface [transition:background_0.15s]",
+  ghost:
+    "bg-transparent text-ink hover:bg-surface [transition:background_0.15s]",
 };
 
 const sizeClasses: Record<NonNullable<ButtonProps["size"]>, string> = {
   default: "h-11 px-4 text-[14px]",
   lg: "h-[46px] px-5 text-[14.5px]",
+  icon: "h-8.5 w-8.5 p-0",
+  "icon-sm": "h-7 w-7 p-0 rounded-sm",
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -28,12 +31,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       className,
       disabled,
+      type = "button",
       ...props
     },
-    ref
+    ref,
   ) => (
     <button
       ref={ref}
+      type={type}
       disabled={disabled || loading}
       className={[
         "inline-flex items-center justify-center gap-2 font-semibold rounded disabled:opacity-60 disabled:cursor-not-allowed",
@@ -51,6 +56,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         children
       )}
     </button>
-  )
+  ),
 );
 Button.displayName = "Button";

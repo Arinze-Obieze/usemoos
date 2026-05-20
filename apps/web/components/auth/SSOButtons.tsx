@@ -18,9 +18,10 @@ const providers = [
 
 interface SSOButtonsProps {
   onSelect: (provider: "oauth_google" | "oauth_microsoft") => void;
+  disabled?: boolean;
 }
 
-export function SSOButtons({ onSelect }: SSOButtonsProps) {
+export function SSOButtons({ onSelect, disabled }: SSOButtonsProps) {
   return (
     <div className="grid grid-cols-2 gap-2 mb-6">
       {providers.map(({ provider, icon, label }) => (
@@ -28,6 +29,7 @@ export function SSOButtons({ onSelect }: SSOButtonsProps) {
           key={provider}
           type="button"
           variant="outline"
+          disabled={disabled}
           onClick={() => onSelect(provider)}
         >
           {icon}
