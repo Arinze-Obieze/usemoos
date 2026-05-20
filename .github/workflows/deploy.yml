@@ -35,7 +35,7 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           IMAGE_URI="$REGISTRY/$ECR_REPOSITORY"
-          docker build -t "$IMAGE_URI:$IMAGE_TAG" -t "$IMAGE_URI:latest" .
+          docker build -f apps/web/Dockerfile -t "$IMAGE_URI:$IMAGE_TAG" -t "$IMAGE_URI:latest" .
           docker push "$IMAGE_URI:$IMAGE_TAG"
           docker push "$IMAGE_URI:latest"
           echo "image=$IMAGE_URI:$IMAGE_TAG" >> $GITHUB_OUTPUT

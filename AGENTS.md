@@ -20,9 +20,9 @@ knowledge across Slack, Notion, Google Drive, GitHub, Jira, and 250+ other tools
 workspace where employees can search and converse with their organization's knowledge in natural
 language. It is a multi-tenant B2B SaaS product.
 
-**This repo is the Next.js frontend only.** It handles the marketing site and the product UI.
-It does not contain the backend API, the RAG pipeline, the sync workers, or the database layer.
-Those are separate services described below.
+**This repo is the Turborepo monorepo root.** It contains the Next.js frontend (`apps/web/`),
+the Hono API server (`apps/api/`), and shared packages. The RAG pipeline, sync workers, and
+database schema will live here as well when those layers are built out.
 
 ---
 
@@ -52,9 +52,9 @@ packages/
   and any route that involves database queries or external services live there — not here.
 - **This repo does not own the database.** Drizzle schema lives in `packages/db`. This frontend
   calls the Hono API over HTTP; it does not connect to PostgreSQL directly.
-- **Do not add Next.js Route Handlers** to `app/api/` unless you have an explicit, specific reason
-  that cannot be handled by calling the Hono API. The one existing handler (`app/api/waitlist/`)
-  is a pre-Hono exception from the marketing phase. It is not a template to follow.
+- **Do not add Next.js Route Handlers** to `apps/web/app/api/`. The Hono API in `apps/api/` is
+  the backend. Route Handlers are not a template to follow — the existing `app/api/waitlist/`
+  handler is a legacy stub that should be removed once the API is deployed.
 
 ---
 
@@ -75,38 +75,58 @@ These are the packages used in this repo. Do not install alternatives.
 
 ---
 
+## 3b. Backend Tech Stack (`apps/api/`)
+
+These are the packages used in the Hono API. Do not install alternatives.
+
+| Package | Purpose |
+|---|---|
+| `hono` | Core API framework — TypeScript-native, lightweight, streaming support |
+| `@hono/node-server` | Node.js HTTP adapter for Hono |
+| `@hono/zod-validator` | Request validation middleware using Zod schemas |
+| `zod` | Schema validation and type inference |
+| `tsx` | TypeScript execution for `dev` mode (watch mode) |
+
+---
+
 ## 4. Folder Structure
 
-All paths below are relative to the root of this repo. There is no `apps/web/` prefix — you are
-already inside the web app.
-
 ```
-app/
-  (marketing)/          Public marketing pages. No auth required.
-    page.tsx            Thin orchestrator — imports and composes section components only.
-    layout.tsx
-  (app)/                Authenticated product workspace. Clerk middleware applies here.
-    layout.tsx          Wraps with Clerk auth + workspace context provider.
-    (workspace)/
-      page.tsx          Main search/conversation interface.
-      integrations/
-        page.tsx
-      settings/
-        page.tsx
-    (admin)/
-      page.tsx
-  (auth)/               Clerk sign-in and sign-up pages.
-  api/                  Next.js Route Handlers. Nearly empty — see Section 2.
-  globals.css           Single source of truth for ALL design tokens.
-  layout.tsx            Root layout with font variables and metadata.
+apps/
+  web/                  Next.js frontend — marketing site and product workspace UI.
+    app/
+      (marketing)/      Public marketing pages. No auth required.
+        page.tsx        Thin orchestrator — imports and composes section components only.
+        layout.tsx
+      (app)/            Authenticated product workspace. Clerk middleware applies here.
+        layout.tsx      Wraps with Clerk auth + workspace context provider.
+        (workspace)/
+          page.tsx      Main search/conversation interface.
+          integrations/
+            page.tsx
+          settings/
+            page.tsx
+        (admin)/
+          page.tsx
+      (auth)/           Clerk sign-in and sign-up pages.
+      api/              Legacy Next.js Route Handler (waitlist stub). Do not add more.
+      globals.css       Single source of truth for ALL design tokens.
+      layout.tsx        Root layout with font variables and metadata.
+    components/
+      marketing/        Marketing-only components. No shadcn/ui. Custom design system only.
+      ui/               shadcn/ui base components. Used by (app) only. Never by marketing.
+      app/              Product workspace components: search, citations, conversation, etc.
+      shared/           Components used by both marketing and app. Keep this rare.
+    lib/                Frontend-only utilities (formatting, hooks, query functions).
 
-components/
-  marketing/            Marketing-only components. No shadcn/ui. Custom design system only.
-  ui/                   shadcn/ui base components. Used by (app) only. Never by marketing.
-  app/                  Product workspace components: search, citations, conversation, etc.
-  shared/               Components used by both marketing and app. Keep this rare.
+  api/                  Hono API server — all business logic, RAG, integrations, auth.
+    src/
+      index.ts          App entry point. Registers routes and starts the server.
+      routes/           One file per domain (waitlist.ts, search.ts, integrations.ts, …).
 
-lib/                    Frontend-only utilities (formatting, hooks, query functions).
+packages/
+  types/                Shared TypeScript interfaces and enums. Import as @usemoos/types.
+  db/                   Drizzle ORM schema and typed query helpers. Import as @usemoos/db.
 ```
 
 ### Naming conventions
