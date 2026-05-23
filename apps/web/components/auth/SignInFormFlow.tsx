@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getClerkError } from "@/lib/clerkError";
+import type { AuthProvider } from "@/lib/authTypes";
 
 type Mode =
   | "signin"
@@ -20,7 +21,6 @@ type Mode =
   | "new-password"
   | "verify-mfa"
   | "magic-link-sent";
-type AuthProvider = "oauth_google" | "oauth_microsoft";
 
 const emHighlight: React.CSSProperties = {
   background:

@@ -1,19 +1,19 @@
 "use client";
+import type { Citation } from "@usemoos/types";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 import ConnectionsScreen from "@/components/app/ConnectionsScreen";
 import HomeScreen from "@/components/app/HomeScreen";
 import LibraryScreen from "@/components/app/LibraryScreen";
 import SearchScreen from "@/components/app/SearchScreen";
+import SettingsScreen from "@/components/app/SettingsScreen";
 import ThreadScreen from "@/components/app/ThreadScreen";
 import WorkspaceIcon from "@/components/app/WorkspaceIcon";
 import WorkspaceRail, { RailContent } from "@/components/app/WorkspaceRail";
 import WorkspaceSidebar from "@/components/app/WorkspaceSidebar";
-import {
-  ACTIVE_THREAD,
-  type AccountState,
-  type Screen,
-} from "@/components/app/workspaceData";
+import type { Screen } from "@usemoos/types";
+import { useWorkspaceStore } from "@/lib/workspaceStore";
 
 type SidebarMode = "full" | "compact" | "none";
 
@@ -21,20 +21,22 @@ interface WorkspaceShellProps {
   initialScreen?: Screen;
 }
 
-const CRUMB_LABELS: Record<Screen, string> = {
-  home: "Home",
-  ask: ACTIVE_THREAD.q,
-  connections: "Sources",
-  library: "Library",
-  search: "Search",
-};
-
 const SCREEN_HREFS: Record<Screen, string> = {
   home: "/workspace",
   ask: "/workspace/ask",
   connections: "/workspace/sources",
   library: "/workspace/library",
   search: "/workspace/search",
+  settings: "/workspace/settings",
+};
+
+const CRUMB_LABELS: Record<Screen, string> = {
+  home: "Home",
+  ask: "Ask",
+  connections: "Sources",
+  library: "Library",
+  search: "Search",
+  settings: "Settings",
 };
 
 export default function WorkspaceShell({
@@ -44,12 +46,18 @@ export default function WorkspaceShell({
   const [screen, setScreen] = useState<Screen>(initialScreen);
   const [sidebarMode, setSidebarMode] = useState<SidebarMode>("full");
   const [showRail, setShowRail] = useState(true);
-  const [accountState] = useState<AccountState>("partial");
   const [showOnboarding, setShowOnboarding] = useState(true);
-  const [activeThreadId, setActiveThreadId] = useState("t1");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [tabletSidebarOpen, setTabletSidebarOpen] = useState(false);
   const [mobileRailOpen, setMobileRailOpen] = useState(false);
+  const [activeCitations, setActiveCitations] = useState<Citation[]>([]);
+  const [activeQuery, setActiveQuery] = useState<string | null>(null);
+  const [activeConversationId, setActiveConversationId] = useState<
+    string | null
+  >(null);
+
+  const { setPendingQuery, setPendingConversationId } = useWorkspaceStore();
+  const pendingConsumedRef = useRef(false);
 
   useEffect(() => {
     setScreen(initialScreen);
@@ -58,26 +66,44 @@ export default function WorkspaceShell({
     setMobileRailOpen(false);
   }, [initialScreen]);
 
+  // Consume pending query/conversationId from the Zustand store on ask-screen mount
+  useEffect(() => {
+    if (initialScreen !== "ask" || pendingConsumedRef.current) return;
+    pendingConsumedRef.current = true;
+    const { query, conversationId } = useWorkspaceStore
+      .getState()
+      .consumePending();
+    if (query) setActiveQuery(query);
+    if (conversationId) setActiveConversationId(conversationId);
+  }, [initialScreen]);
+
   const cycleSidebar = () =>
     setSidebarMode((m) =>
       m === "full" ? "compact" : m === "compact" ? "none" : "full",
     );
 
-  const goTo = (s: Screen) => {
-    setScreen(s);
+  const closeOverlays = () => {
     setMobileNavOpen(false);
     setTabletSidebarOpen(false);
     setMobileRailOpen(false);
+  };
+
+  const goTo = (s: Screen) => {
+    setScreen(s);
+    closeOverlays();
     router.push(SCREEN_HREFS[s]);
   };
-  const onAsk = (_q?: string) => {
-    setActiveThreadId("t1");
+
+  const onAsk = (q?: string) => {
+    if (q) setPendingQuery(q);
     goTo("ask");
   };
+
   const onOpenThread = (id: string) => {
-    setActiveThreadId(id);
+    setPendingConversationId(id);
     goTo("ask");
   };
+
   const showDesktopContextRail = screen === "ask" && showRail;
 
   const shellClass = [
@@ -89,9 +115,11 @@ export default function WorkspaceShell({
     .join(" ");
 
   const mainGridStyle = {
-    gridTemplateColumns: showDesktopContextRail ? "1fr var(--rail-w)" : "1fr",
+    "--workspace-main-columns": showDesktopContextRail
+      ? "1fr var(--rail-w)"
+      : "1fr",
     gridTemplateRows: "var(--top-h) 1fr",
-  };
+  } as CSSProperties;
 
   const topBtn =
     "w-[34px] h-[34px] rounded-[8px] text-ink-2 grid place-items-center hover:bg-surface-2 hover:text-ink transition-colors shrink-0";
@@ -107,8 +135,7 @@ export default function WorkspaceShell({
         >
           <WorkspaceSidebar
             screen={screen}
-            activeThreadId={activeThreadId}
-            accountState={accountState}
+            activeConversationId={activeConversationId}
             onNavigate={goTo}
             onOpenThread={onOpenThread}
             onCycleMode={cycleSidebar}
@@ -127,7 +154,7 @@ export default function WorkspaceShell({
             className="col-span-full flex items-center gap-2 px-4 max-[600px]:px-3 border-b border-line bg-bg"
             style={{ height: "var(--top-h)" }}
           >
-            {/* Desktop: sidebar cycle toggle — always visible, cycles full→compact→none */}
+            {/* Desktop: cycle sidebar full→compact→none */}
             <button
               type="button"
               className={`${topBtn} max-[900px]:hidden`}
@@ -137,7 +164,7 @@ export default function WorkspaceShell({
               <WorkspaceIcon name="sidebar" size={15} />
             </button>
 
-            {/* Tablet: sidebar expand — opens full overlay */}
+            {/* Tablet: open full overlay */}
             <button
               type="button"
               className={`${topBtn} min-[901px]:hidden max-[600px]:hidden`}
@@ -227,27 +254,32 @@ export default function WorkspaceShell({
           >
             {screen === "home" && (
               <HomeScreen
-                accountState={accountState}
                 showOnboarding={showOnboarding}
                 onDismissOnboarding={() => setShowOnboarding(false)}
                 onAsk={onAsk}
                 onOpenThread={onOpenThread}
               />
             )}
-            {screen === "ask" && <ThreadScreen onAsk={onAsk} />}
-            {screen === "connections" && (
-              <ConnectionsScreen accountState={accountState} />
+            {screen === "ask" && (
+              <ThreadScreen
+                onAsk={onAsk}
+                initialQuery={activeQuery}
+                initialConversationId={activeConversationId}
+                onCitationsUpdate={setActiveCitations}
+              />
             )}
+            {screen === "connections" && <ConnectionsScreen />}
             {screen === "library" && (
               <LibraryScreen onOpenThread={onOpenThread} />
             )}
             {screen === "search" && <SearchScreen />}
+            {screen === "settings" && <SettingsScreen />}
           </main>
 
           {/* Context rail — desktop grid */}
           {showDesktopContextRail && (
             <div className="max-[900px]:hidden min-h-0 overflow-hidden">
-              <WorkspaceRail screen={screen} />
+              <WorkspaceRail screen={screen} citations={activeCitations} />
             </div>
           )}
         </div>
@@ -265,8 +297,7 @@ export default function WorkspaceShell({
           <div className="absolute left-0 top-0 bottom-0 w-[280px] shadow-[var(--shadow-xl)]">
             <WorkspaceSidebar
               screen={screen}
-              activeThreadId={activeThreadId}
-              accountState={accountState}
+              activeConversationId={activeConversationId}
               onNavigate={goTo}
               onOpenThread={onOpenThread}
               forceExpanded
@@ -287,8 +318,7 @@ export default function WorkspaceShell({
           <div className="absolute left-0 top-0 bottom-0 w-[280px] shadow-[var(--shadow-xl)]">
             <WorkspaceSidebar
               screen={screen}
-              activeThreadId={activeThreadId}
-              accountState={accountState}
+              activeConversationId={activeConversationId}
               onNavigate={goTo}
               onOpenThread={onOpenThread}
               forceExpanded
@@ -320,7 +350,7 @@ export default function WorkspaceShell({
               </button>
             </div>
             <div className="flex-1 overflow-y-auto px-[22px] pt-6 pb-10 [scrollbar-width:thin] [scrollbar-color:var(--line-2)_transparent]">
-              <RailContent screen={screen} />
+              <RailContent screen={screen} citations={activeCitations} />
             </div>
           </div>
         </div>

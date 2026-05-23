@@ -1,7 +1,5 @@
-"use client";
-
-import { RedirectToTasks } from "@clerk/nextjs";
+import TasksRedirect from "@/components/auth/TasksRedirect";
 
 export default function TasksPage() {
-  return <RedirectToTasks redirectUrl="/workspace" />;
+  return <TasksRedirect />;
 }
