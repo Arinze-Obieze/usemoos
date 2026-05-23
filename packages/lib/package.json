@@ -1,0 +1,23 @@
+{
+  "name": "@usemoos/lib",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./llm": "./src/llm/index.ts",
+    "./rag": "./src/rag/index.ts",
+    "./chunking": "./src/chunking/index.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.54.0",
+    "@aws-sdk/client-s3": "^3.0.0",
+    "@pinecone-database/pinecone": "^5.0.0",
+    "cohere-ai": "^7.0.0",
+    "openai": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5"
+  }
+}

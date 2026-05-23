@@ -22,7 +22,7 @@ waitlist.post("/", zValidator("json", schema), async (c) => {
       body: JSON.stringify({
         fields: { Email: email, "Signed Up": new Date().toISOString() },
       }),
-    }
+    },
   );
 
   const loopsPromise = fetch("https://app.loops.so/api/v1/contacts/create", {

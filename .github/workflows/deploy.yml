@@ -56,6 +56,7 @@ jobs:
           service: ${{ secrets.ECS_SERVICE }}
           cluster: ${{ secrets.ECS_CLUSTER }}
           wait-for-service-stability: true
+          wait-for-minutes: 20
 
       - name: Invalidate CloudFront
         run: |
@@ -111,6 +112,7 @@ jobs:
           service: usemoose-api
           cluster: ${{ secrets.ECS_CLUSTER }}
           wait-for-service-stability: true
+          wait-for-minutes: 20
 
   # ── Workers (BullMQ) ──────────────────────────────────────────────────────
   deploy-workers:
@@ -160,3 +162,4 @@ jobs:
           service: usemoose-workers
           cluster: ${{ secrets.ECS_CLUSTER }}
           wait-for-service-stability: true
+          wait-for-minutes: 20

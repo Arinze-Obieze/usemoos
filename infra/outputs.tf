@@ -30,3 +30,26 @@ output "cert_validation_records" {
     }}
   )
 }
+
+output "api_ecr_repository_url" {
+  value = aws_ecr_repository.api.repository_url
+}
+
+output "workers_ecr_repository_url" {
+  value = aws_ecr_repository.workers.repository_url
+}
+
+output "api_alb_dns" {
+  description = "Point api.usemoos.com CNAME to this in Cloudflare"
+  value       = aws_lb.api.dns_name
+}
+
+# Add this CNAME in Cloudflare (DNS only — NOT proxied) to validate the API cert
+output "api_cert_validation_records" {
+  description = "Add these CNAME records in Cloudflare to validate the API ACM certificate"
+  value = { for v in aws_acm_certificate.api.domain_validation_options : v.domain_name => {
+    name  = v.resource_record_name
+    type  = v.resource_record_type
+    value = v.resource_record_value
+  }}
+}

@@ -1,4 +1,4 @@
-import { createClerkClient } from "@clerk/backend";
+import { verifyToken } from "@clerk/backend";
 import { createMiddleware } from "hono/factory";
 
 type AuthEnv = {
@@ -8,10 +8,6 @@ type AuthEnv = {
   };
 };
 
-const clerk = createClerkClient({
-  secretKey: process.env.CLERK_SECRET_KEY,
-});
-
 export const clerkAuth = createMiddleware<AuthEnv>(async (c, next) => {
   const authHeader = c.req.header("Authorization");
   if (!authHeader?.startsWith("Bearer ")) {
@@ -20,7 +16,10 @@ export const clerkAuth = createMiddleware<AuthEnv>(async (c, next) => {
 
   const token = authHeader.slice(7);
 
-  const payload = await clerk.verifyToken(token).catch(() => null);
+  const payload = await verifyToken(token, {
+    secretKey: process.env.CLERK_SECRET_KEY ?? "",
+  }).catch(() => null);
+
   if (!payload) {
     return c.json({ error: "Unauthorized" }, 401);
   }

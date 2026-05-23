@@ -1,0 +1,20 @@
+{
+  "name": "@usemoos/adapters",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./google-drive": "./src/google-drive.ts",
+    "./notion": "./src/notion.ts",
+    "./slack": "./src/slack.ts"
+  },
+  "dependencies": {
+    "@nangohq/node": "^0.39.0",
+    "@usemoos/types": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5"
+  }
+}
