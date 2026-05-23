@@ -24,8 +24,16 @@ resource "aws_ecs_task_definition" "app" {
       protocol      = "tcp"
     }]
     environment = [
-      { name = "AWS_REGION", value = var.aws_region },
-      { name = "NODE_ENV",   value = "production" }
+      { name = "AWS_REGION",                                       value = var.aws_region },
+      { name = "NODE_ENV",                                         value = "production" },
+      { name = "NEXT_PUBLIC_CLERK_SIGN_IN_URL",                    value = "/sign-in" },
+      { name = "NEXT_PUBLIC_CLERK_SIGN_UP_URL",                    value = "/sign-up" },
+      { name = "NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL",  value = "/workspace" },
+      { name = "NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL",  value = "/workspace" },
+    ]
+    secrets = [
+      { name = "CLERK_SECRET_KEY",                  valueFrom = "/usemoose/web/CLERK_SECRET_KEY" },
+      { name = "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY", valueFrom = "/usemoose/web/NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY" },
     ]
     logConfiguration = {
       logDriver = "awslogs"
