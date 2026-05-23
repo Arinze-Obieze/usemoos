@@ -22,7 +22,13 @@ export const Checkbox = React.forwardRef<
   >
     <CheckboxPrimitive.Indicator>
       {/* Custom stroke checkmark to match accent color */}
-      <svg width="8" height="7" viewBox="0 0 8 7" fill="none" aria-hidden="true">
+      <svg
+        width="8"
+        height="7"
+        viewBox="0 0 8 7"
+        fill="none"
+        aria-hidden="true"
+      >
         <path
           d="M1 3.5L3 5.5L7 1.5"
           stroke="var(--accent)"

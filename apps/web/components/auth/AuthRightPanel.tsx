@@ -63,9 +63,11 @@ function PreviewCard() {
       </div>
       <div className="text-[14.5px] leading-[1.55] text-ink">
         Annual contracts are{" "}
-        <strong className="font-semibold">non-refundable after 30 days</strong>, but customers can
-        pause for up to 90 days <CitBadge>1</CitBadge>. Exceptions above $10k require{" "}
-        <strong className="font-semibold">VP Finance</strong> approval <CitBadge>2</CitBadge>.
+        <strong className="font-semibold">non-refundable after 30 days</strong>,
+        but customers can pause for up to 90 days <CitBadge>1</CitBadge>.
+        Exceptions above $10k require{" "}
+        <strong className="font-semibold">VP Finance</strong> approval{" "}
+        <CitBadge>2</CitBadge>.
         <div className="flex flex-wrap gap-1.5 mt-3.5 pt-3.5 border-t border-dashed border-line">
           <SourcePill num="1" label="Customer Agreement v4.2 · Notion" />
           <SourcePill num="2" label="#finance-approvals · Slack" />
@@ -79,8 +81,8 @@ function QuoteCard() {
   return (
     <div className="flex flex-col gap-3.5 max-w-110">
       <p className="text-[16px] leading-normal text-ink text-wrap-pretty">
-        &ldquo;We started usemoos because we kept watching brilliant teams ask the same questions
-        twice.{" "}
+        &ldquo;We started usemoos because we kept watching brilliant teams ask
+        the same questions twice.{" "}
         <em
           className="not-italic"
           style={{
@@ -96,12 +98,17 @@ function QuoteCard() {
       <div className="flex items-center gap-2.5 font-mono text-[11.5px] text-muted">
         <span
           className="w-7 h-7 rounded-full grid place-items-center text-[11px] font-semibold border"
-          style={{ background: "var(--accent)", borderColor: "var(--accent-2)", color: "var(--accent-ink)" }}
+          style={{
+            background: "var(--accent)",
+            borderColor: "var(--accent-2)",
+            color: "var(--accent-ink)",
+          }}
         >
           AO
         </span>
         <span>
-          <strong className="font-semibold text-ink">Arinze Obieze</strong> · Founder, usemoos
+          <strong className="font-semibold text-ink">Arinze Obieze</strong> ·
+          Founder, usemoos
         </span>
       </div>
     </div>
@@ -121,7 +128,8 @@ export default function AuthRightPanel() {
           right: "-20%",
           width: 500,
           height: 500,
-          background: "radial-gradient(circle at center, rgba(200,255,123,0.12) 0%, transparent 60%)",
+          background:
+            "radial-gradient(circle at center, rgba(200,255,123,0.12) 0%, transparent 60%)",
           filter: "blur(24px)",
         }}
       />
@@ -131,15 +139,19 @@ export default function AuthRightPanel() {
           backgroundImage:
             "linear-gradient(to right, rgba(15,17,8,0.025) 1px, transparent 1px), linear-gradient(to bottom, rgba(15,17,8,0.025) 1px, transparent 1px)",
           backgroundSize: "60px 60px",
-          maskImage: "radial-gradient(ellipse at 70% 30%, black 0%, transparent 70%)",
-          WebkitMaskImage: "radial-gradient(ellipse at 70% 30%, black 0%, transparent 70%)",
+          maskImage:
+            "radial-gradient(ellipse at 70% 30%, black 0%, transparent 70%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse at 70% 30%, black 0%, transparent 70%)",
         }}
       />
 
       <div className="relative z-10 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.25 no-underline">
           <MoosLogo size={26} />
-          <span className="font-bold text-[18px] tracking-tight text-ink">usemoos</span>
+          <span className="font-bold text-[18px] tracking-tight text-ink">
+            usemoos
+          </span>
         </Link>
         <span className="flex items-center gap-1.75 px-3 py-1.25 rounded-full font-mono text-[11px] tracking-[0.02em] text-ink-2 bg-surface border border-line">
           <span
@@ -191,7 +203,10 @@ export default function AuthRightPanel() {
               <li key={f.title} className="flex gap-3 items-start">
                 <span
                   className="w-5.5 h-5.5 rounded-full grid place-items-center text-[11px] font-bold shrink-0 mt-px"
-                  style={{ background: "var(--accent)", color: "var(--accent-ink)" }}
+                  style={{
+                    background: "var(--accent)",
+                    color: "var(--accent-ink)",
+                  }}
                 >
                   ✓
                 </span>
@@ -199,7 +214,9 @@ export default function AuthRightPanel() {
                   <div className="text-[15px] font-semibold tracking-[-0.01em] mb-0.75 text-ink">
                     {f.title}
                   </div>
-                  <div className="text-[13.5px] leading-[1.45] text-muted">{f.sub}</div>
+                  <div className="text-[13.5px] leading-[1.45] text-muted">
+                    {f.sub}
+                  </div>
                 </div>
               </li>
             ))}
@@ -218,7 +235,7 @@ export default function AuthRightPanel() {
           {["Security", "Status", "Help"].map((item) => (
             <a
               key={item}
-              href="#"
+              href={`/${item.toLowerCase()}`}
               className="text-muted hover:text-ink [transition:color_0.15s]"
             >
               {item}

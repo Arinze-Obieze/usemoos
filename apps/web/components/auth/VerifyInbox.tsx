@@ -1,10 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { HiMail } from "react-icons/hi";
 import { SiGmail } from "react-icons/si";
+import { Field } from "@/components/auth/Field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Field } from "@/components/auth/Field";
 
 const emHighlight: React.CSSProperties = {
   background:
@@ -14,7 +14,10 @@ const emHighlight: React.CSSProperties = {
 
 const OutlookIcon = () => (
   <svg viewBox="0 0 24 24" width={18} height={18} aria-hidden="true">
-    <path fill="#0078D4" d="M12.5 4h7.5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-7.5V4z" />
+    <path
+      fill="#0078D4"
+      d="M12.5 4h7.5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-7.5V4z"
+    />
     <rect x="2" y="5" width="11" height="14" fill="#106EBE" rx="1" />
     <ellipse cx="7.5" cy="12" rx="2.8" ry="3.3" fill="#FFFFFF" />
     <ellipse cx="7.5" cy="12" rx="1.3" ry="1.7" fill="#106EBE" />
@@ -89,7 +92,11 @@ export function VerifyInbox({
       </div>
 
       <h1 className="text-[36px] leading-[1.05] tracking-tight font-semibold text-ink mb-3 text-wrap-balance">
-        Check your <em className="not-italic" style={emHighlight}>inbox</em>.
+        Check your{" "}
+        <em className="not-italic" style={emHighlight}>
+          inbox
+        </em>
+        .
       </h1>
       <p className="text-[15px] text-ink-2 leading-normal mb-2 text-wrap-pretty">
         We sent a 6-digit code to:
@@ -141,7 +148,12 @@ export function VerifyInbox({
             className="text-[18px] font-mono tracking-[0.4em] text-center"
           />
         </Field>
-        <Button type="submit" size="lg" loading={loading} className="w-full mt-1">
+        <Button
+          type="submit"
+          size="lg"
+          loading={loading}
+          className="w-full mt-1"
+        >
           {submitLabel} <span>→</span>
         </Button>
       </form>

@@ -1,0 +1,14 @@
+
+# clerk configuration (can include secrets)
+/.clerk/
+
+# generated output
+/.next/
+/.turbo/
+/out/
+/dist/
+
+# local env and TypeScript cache
+.env*
+*.tsbuildinfo
+next-env.d.ts

@@ -1,17 +1,41 @@
 "use client";
+import { useAuth, useUser } from "@clerk/nextjs";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import SrcIcon from "@/components/app/SrcIcon";
 import WorkspaceIcon from "@/components/app/WorkspaceIcon";
-import {
-  type AccountState,
-  SOURCES,
-  WORKSPACE_DATA,
-} from "@/components/app/workspaceData";
+import { SOURCES, WORKSPACE_DATA } from "@/components/app/workspaceData";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  apiJson,
+  formatRelativeTime,
+  integrationTypeToSrcKey,
+} from "@/lib/api";
+
+interface Conversation {
+  id: string;
+  title: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface IntegrationConnection {
+  id: string;
+  integration_type: string;
+  status: string;
+  docs_indexed: number | null;
+  last_synced_at: string | null;
+}
+
+interface ActivityConversation {
+  id: string;
+  title: string;
+  user_display_name: string | null;
+  updated_at: string;
+}
 
 interface HomeScreenProps {
-  accountState: AccountState;
   showOnboarding: boolean;
   onDismissOnboarding: () => void;
   onAsk: (q?: string) => void;
@@ -173,17 +197,91 @@ function Composer({ onAsk }: { onAsk: (q: string) => void }) {
   );
 }
 
+function TeamActivity({
+  onOpenThread,
+}: {
+  onOpenThread: (id: string) => void;
+}) {
+  const { getToken } = useAuth();
+
+  const { data: activity = [] } = useQuery({
+    queryKey: ["activity"],
+    queryFn: async () => {
+      const token = await getToken();
+      if (!token) return [];
+      return apiJson<ActivityConversation[]>("/chat/activity", token);
+    },
+    refetchInterval: 30_000,
+  });
+
+  if (activity.length === 0) return null;
+
+  return (
+    <>
+      <div className="flex items-baseline justify-between my-2 mb-3.5">
+        <h2 className="text-[15px] tracking-[-0.005em] font-semibold text-ink m-0">
+          Team activity
+        </h2>
+      </div>
+      <div className="flex flex-col border border-line rounded-[10px] bg-surface mb-8 overflow-hidden">
+        {activity.map((conv) => (
+          <button
+            key={conv.id}
+            type="button"
+            className="grid items-center gap-4 px-4.5 max-[600px]:px-4 py-3.5 border-b border-line last:border-b-0 cursor-pointer hover:bg-bg-2 transition-colors text-left"
+            style={{ gridTemplateColumns: "1fr auto" }}
+            onClick={() => onOpenThread(conv.id)}
+          >
+            <div>
+              <div className="text-[14px] text-ink tracking-[-0.005em] truncate">
+                {conv.title}
+              </div>
+              <div className="font-mono text-[11.5px] text-muted mt-0.5">
+                {conv.user_display_name ?? "Teammate"}
+              </div>
+            </div>
+            <div className="font-mono text-[11.5px] text-muted whitespace-nowrap">
+              {formatRelativeTime(conv.updated_at)}
+            </div>
+          </button>
+        ))}
+      </div>
+    </>
+  );
+}
+
 export default function HomeScreen({
-  accountState,
   showOnboarding,
   onDismissOnboarding,
   onAsk,
   onOpenThread,
 }: HomeScreenProps) {
+  const { getToken } = useAuth();
+  const { user } = useUser();
+
+  const firstName = user?.firstName ?? "there";
+
+  const { data: conversations } = useQuery({
+    queryKey: ["conversations"],
+    queryFn: async () => {
+      const token = await getToken();
+      if (!token) return [];
+      return apiJson<Conversation[]>("/chat/conversations", token);
+    },
+  });
+
+  const { data: integrations } = useQuery({
+    queryKey: ["integrations"],
+    queryFn: async () => {
+      const token = await getToken();
+      if (!token) return [];
+      return apiJson<IntegrationConnection[]>("/integrations", token);
+    },
+  });
+
   const D = WORKSPACE_DATA;
-  const connections = D.connectionsByState[accountState];
-  const isNew = accountState === "new";
-  const showChecklist = showOnboarding && (isNew || accountState === "partial");
+  const hasConversations = (conversations?.length ?? 0) > 0;
+  const hasConnections = (integrations?.length ?? 0) > 0;
 
   const greeting = (() => {
     const hr = new Date().getHours();
@@ -192,6 +290,24 @@ export default function HomeScreen({
     if (hr < 18) return "Good afternoon";
     return "Good evening";
   })();
+
+  const showChecklist = showOnboarding && !hasConnections;
+
+  // Map integrations to display-friendly shape
+  const connectionItems = (integrations ?? []).map((c) => {
+    const src = integrationTypeToSrcKey(c.integration_type);
+    const isError = c.status === "error";
+    return {
+      src,
+      label: SOURCES[src]?.label ?? c.integration_type,
+      docs: c.docs_indexed ?? 0,
+      lastSync: formatRelativeTime(c.last_synced_at),
+      warn: isError,
+    };
+  });
+
+  const totalDocs = connectionItems.reduce((a, c) => a + c.docs, 0);
+  const hasWarnings = connectionItems.some((c) => c.warn);
 
   return (
     <div className="max-w-230 mx-auto px-10 max-[600px]:px-4 pt-9 max-[600px]:pt-6 pb-20">
@@ -207,7 +323,7 @@ export default function HomeScreen({
               padding: "0 0.08em",
             }}
           >
-            {D.user.name.split(" ")[0]}
+            {firstName}
           </em>
         </h1>
         <div className="font-mono text-[12px] text-muted whitespace-nowrap max-[600px]:hidden">
@@ -255,8 +371,8 @@ export default function HomeScreen({
         ))}
       </div>
 
-      {/* Recent threads */}
-      {!isNew && (
+      {/* Recent conversations */}
+      {hasConversations && (
         <>
           <div className="flex items-baseline justify-between my-2 mb-3.5">
             <h2 className="text-[15px] tracking-[-0.005em] font-semibold text-ink m-0">
@@ -270,26 +386,18 @@ export default function HomeScreen({
             </button>
           </div>
           <div className="flex flex-col border border-line rounded-[10px] bg-surface mb-8 overflow-hidden">
-            {D.threads.slice(0, 4).map((t) => (
+            {(conversations ?? []).slice(0, 4).map((c) => (
               <button
-                key={t.id}
+                key={c.id}
                 type="button"
-                className="grid grid-cols-[1fr_auto_auto] max-[600px]:grid-cols-[1fr_auto] items-center gap-4 max-[600px]:gap-3 px-4.5 max-[600px]:px-4 py-3.5 border-b border-line last:border-b-0 cursor-pointer hover:bg-bg-2 transition-colors text-left"
-                onClick={() => onOpenThread(t.id)}
+                className="grid grid-cols-[1fr_auto] items-center gap-4 max-[600px]:gap-3 px-4.5 max-[600px]:px-4 py-3.5 border-b border-line last:border-b-0 cursor-pointer hover:bg-bg-2 transition-colors text-left"
+                onClick={() => onOpenThread(c.id)}
               >
                 <div className="text-[14px] text-ink tracking-[-0.005em] truncate">
-                  {t.q}
-                  <em className="not-italic text-muted text-[13px] ml-2 max-[600px]:hidden">
-                    {t.by}
-                  </em>
-                </div>
-                <div className="inline-flex max-[600px]:hidden">
-                  {t.srcs.map((s) => (
-                    <SrcIcon key={s} src={s} size={11} />
-                  ))}
+                  {c.title}
                 </div>
                 <div className="font-mono text-[11.5px] text-muted whitespace-nowrap">
-                  {t.when}
+                  {formatRelativeTime(c.updated_at)}
                 </div>
               </button>
             ))}
@@ -312,98 +420,49 @@ export default function HomeScreen({
       <div className="bg-surface border border-line rounded-[10px] p-[18px_20px] mb-8">
         <div className="flex items-center justify-between mb-3.5">
           <h3 className="text-[14px] font-semibold m-0 text-ink">
-            {connections.length}{" "}
-            {connections.length === 1 ? "source" : "sources"} ·{" "}
-            {connections
-              .reduce((a, c) => a + (c.docs || 0), 0)
-              .toLocaleString()}{" "}
-            documents indexed
+            {connectionItems.length}{" "}
+            {connectionItems.length === 1 ? "source" : "sources"} ·{" "}
+            {totalDocs.toLocaleString()} documents indexed
           </h3>
           <div
-            className={`flex items-center gap-1.5 font-mono text-[11.5px] text-muted ${connections.some((c) => c.status === "warn") ? "text-warning" : ""}`}
+            className={`flex items-center gap-1.5 font-mono text-[11.5px] ${hasWarnings ? "text-warning" : "text-muted"}`}
           >
             <span
-              className={`w-1.5 h-1.5 rounded-full ${connections.some((c) => c.status === "warn") ? "bg-warning shadow-[0_0_0_2px_var(--warning-soft)]" : "bg-accent-2 shadow-[0_0_0_2px_var(--accent-soft)]"}`}
+              className={`w-1.5 h-1.5 rounded-full ${hasWarnings ? "bg-warning shadow-[0_0_0_2px_var(--warning-soft)]" : "bg-accent-2 shadow-[0_0_0_2px_var(--accent-soft)]"}`}
             />
-            {connections.some((c) => c.status === "warn")
-              ? "1 needs attention"
-              : "All systems syncing"}
+            {hasWarnings ? "Needs attention" : "All systems syncing"}
           </div>
         </div>
         <div className="grid grid-cols-2 max-[440px]:grid-cols-1 gap-2.5">
-          {connections.length === 0 && (
+          {connectionItems.length === 0 && (
             <div className="col-span-2 flex items-center justify-center gap-2.5 py-2 bg-bg-2 rounded-[8px] text-[12.5px] text-muted">
               No sources connected yet. Connect Notion, Slack, or Drive to get
               started.
             </div>
           )}
-          {connections.slice(0, 6).map((c) => (
+          {connectionItems.slice(0, 6).map((c) => (
             <div
               key={c.src}
-              className={`flex items-center gap-2.5 py-2 bg-bg-2 rounded-[8px] text-[12.5px] ${c.status === "warn" ? "text-warning" : ""}`}
+              className="flex items-center gap-2.5 py-2 bg-bg-2 rounded-[8px] text-[12.5px]"
             >
               <SrcIcon src={c.src} size={12} />
               <div>
-                <div className="text-ink font-medium">
-                  {SOURCES[c.src]?.label}
-                </div>
+                <div className="text-ink font-medium">{c.label}</div>
                 <div className="font-mono text-[11px] text-muted">
                   {c.docs.toLocaleString()} docs
                 </div>
               </div>
               <div
-                className={`ml-auto font-mono text-[11px] ${c.status === "warn" ? "text-warning" : "text-muted"}`}
+                className={`ml-auto font-mono text-[11px] ${c.warn ? "text-warning" : "text-muted"}`}
               >
-                {c.status === "warn" ? "needs attention" : c.lastSync}
+                {c.warn ? "error" : c.lastSync}
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Team activity */}
-      {!isNew && (
-        <>
-          <div className="flex items-baseline justify-between my-2 mb-3.5">
-            <h2 className="text-[15px] tracking-[-0.005em] font-semibold text-ink m-0">
-              From your team
-            </h2>
-            <button
-              type="button"
-              className="text-[12.5px] text-muted hover:text-ink flex items-center gap-1"
-            >
-              Activity feed <WorkspaceIcon name="chev-r" size={12} />
-            </button>
-          </div>
-          <div className="flex flex-col border border-line rounded-[10px] bg-surface overflow-hidden">
-            {D.teamActivity.map((a) => (
-              <button
-                key={`${a.who}-${a.when}-${a.q}`}
-                type="button"
-                className="grid grid-cols-[1fr_auto_auto] max-[600px]:grid-cols-[1fr_auto] items-center gap-4 max-[600px]:gap-3 px-4.5 max-[600px]:px-4 py-3.5 border-b border-line last:border-b-0 cursor-pointer hover:bg-bg-2 transition-colors text-left"
-                onClick={() => onOpenThread("t1")}
-              >
-                <div className="text-[14px] text-ink truncate">
-                  <span className="text-muted">
-                    <b className="text-ink-2 font-medium">{a.who}</b> {
-                      a.action
-                    }{" "}
-                  </span>
-                  {a.q}
-                </div>
-                <div className="inline-flex max-[600px]:hidden">
-                  {a.srcs.map((s) => (
-                    <SrcIcon key={s} src={s} size={11} />
-                  ))}
-                </div>
-                <div className="font-mono text-[11.5px] text-muted whitespace-nowrap">
-                  {a.when}
-                </div>
-              </button>
-            ))}
-          </div>
-        </>
-      )}
+      <TeamActivity onOpenThread={onOpenThread} />
     </div>
   );
 }

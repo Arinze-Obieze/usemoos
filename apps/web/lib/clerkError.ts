@@ -1,4 +1,7 @@
-import { isClerkAPIResponseError, isClerkRuntimeError } from "@clerk/nextjs/errors";
+import {
+  isClerkAPIResponseError,
+  isClerkRuntimeError,
+} from "@clerk/nextjs/errors";
 
 interface ClerkErrorLike {
   errors?: Array<{
@@ -15,7 +18,11 @@ function isClerkErrorLike(err: unknown): err is ClerkErrorLike {
 
 export function getClerkError(err: unknown): string {
   if (isClerkAPIResponseError(err)) {
-    return err.errors[0]?.longMessage ?? err.errors[0]?.message ?? "Something went wrong.";
+    return (
+      err.errors[0]?.longMessage ??
+      err.errors[0]?.message ??
+      "Something went wrong."
+    );
   }
   if (isClerkRuntimeError(err)) {
     return err.longMessage ?? err.message;
