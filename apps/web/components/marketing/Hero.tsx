@@ -63,7 +63,9 @@ export default function Hero() {
           Your company&apos;s <em>collective brain</em>, finally searchable.
         </h1>
         <p className={cx(styles, "subhead")}>
-          Stop losing hours searching across disconnected tools. usemoos creates a unified intelligence layer over Slack, Notion, Drive and more, delivering instant answers with trusted citations.
+          Stop losing hours searching across disconnected tools. usemoos creates
+          a unified intelligence layer over Slack, Notion, Drive and more,
+          delivering instant answers with trusted citations.
         </p>
         <WaitlistForm id="hero" style={{ margin: "0 auto 14px" }} />
         <div className={cx(styles, "hero-trust")}>
